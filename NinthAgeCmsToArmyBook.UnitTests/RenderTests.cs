@@ -10,20 +10,7 @@ public class RenderTests
     [Test]
     public void BasicRenderingWorks()
     {
-        var globalProfiles = new List<GlobalProfile>
-        {
-            new(5, 10, 9)
-        };
-        var defensiveProfiles = new List<DefensiveProfile>
-        {
-            new(1, 4, 3, 3)
-        };
-        var offensiveProfiles = new List<OffensiveProfile>
-        {
-            new(1, 5, 4, 1, 6)
-        };
-        var unit = new Unit("OBsGuard", globalProfiles, defensiveProfiles, offensiveProfiles, false);
-
+        var unit = Unit.Init();
         var latexRepository = new LatexRepository();
     }
 

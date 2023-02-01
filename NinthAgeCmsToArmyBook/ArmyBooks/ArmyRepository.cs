@@ -50,4 +50,9 @@ public class ArmyRepository : MongoDbRepositoryBase
     {
         return LoadFirst<ArmyVersions>(objectId);
     }
+
+    public Task<bool> Update(ArmyVersions army)
+    {
+        return UpdateVersionsave(army);
+    }
 }
