@@ -1,0 +1,77 @@
+﻿@page "/army/{Id}"
+@using MongoDB.Bson
+@using NinthAgeCmsToArmyBook.ArmyBooks
+
+@if (Army != null)
+{
+    <PageTitle>@Army.ArmyName (@SelectedBook.Version)</PageTitle>
+    
+    <div class="row">
+        <div class="col">
+            <h1>@Army.ArmyName (@SelectedBook.Version)</h1>
+        </div>
+        <div class="col">
+            <div class="dropdown float-end">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSeason" data-bs-toggle="dropdown" aria-expanded="false">
+                    Switch version
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSeason">
+                    @foreach (var armyBook in Army.Versions.AsEnumerable().Reverse())
+                    {
+                        <li>
+                            <a class="dropdown-item" @onclick="() => SelectVersion(armyBook)">@armyBook.Version</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+            <button class="btn btn-success float-end me-2" @onclick="CreateNewVersion">
+                <span class="oi oi-plus me-2"></span>
+                <span>new version</span>
+            </button>
+        </div>
+    </div>
+    
+    <div class="row">
+        <h2>Special Rules</h2>
+    </div>
+    <div class="row">
+        <h2>Units</h2>
+        @foreach (var unit in SelectedBook.Units)
+        {
+            <UnitComponent unit="@unit" />
+        }
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+@inject ArmyRepository ArmyRepository
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public ArmyVersions Army { get; set; }
+    public ArmyBook SelectedBook { get; set; }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
+        SelectedBook = Army.Versions.Last();
+    }
+
+    private void SelectVersion(ArmyBook armyBook)
+    {
+        SelectedBook = armyBook;
+    }
+
+    private void CreateNewVersion()
+    {
+        var armyBook = Army.Versions.Last().Clone();
+        Army.Versions.Add(armyBook);
+        SelectedBook = armyBook;
+    }
+
+}

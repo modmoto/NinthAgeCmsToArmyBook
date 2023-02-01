@@ -1,8 +1,19 @@
+using MongoDB.Driver;
+using NinthAgeCmsToArmyBook.ArmyBooks;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
+builder.Services.AddTransient<ArmyRepository>();
+
+builder.Services.AddSingleton(_ =>
+{
+    // var mongoConnectionString = Environment.GetEnvironmentVariable("MONGO_DB_CONNECTION_STRING");
+    var mongoConnectionString = "mongodb://admin:JzZxkHsmL2f62PEX@65.21.139.246:1001";
+    return new MongoClient(mongoConnectionString);
+});
 
 var app = builder.Build();
 

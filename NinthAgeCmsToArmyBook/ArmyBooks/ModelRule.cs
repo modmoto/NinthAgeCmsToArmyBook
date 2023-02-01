@@ -1,4 +1,4 @@
-﻿namespace NinthAgeCmsToArmyBook.Model;
+﻿namespace NinthAgeCmsToArmyBook.ArmyBooks;
 
 public class ModelRule
 {

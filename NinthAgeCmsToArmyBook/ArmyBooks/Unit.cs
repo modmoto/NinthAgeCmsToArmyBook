@@ -1,4 +1,4 @@
-﻿namespace NinthAgeCmsToArmyBook.Model;
+﻿namespace NinthAgeCmsToArmyBook.ArmyBooks;
 
 public class Unit
 {
@@ -11,9 +11,9 @@ public class Unit
         IsMount = isMount;
     }
     
-    public List<GlobalProfile> GlobalProfile { get; }
-    public List<DefensiveProfile> DefensiveProfile { get; }
-    public List<OffensiveProfile> OffensiveProfile { get; }
-    public bool IsMount { get; }
-    public string Name { get; }
+    public List<GlobalProfile> GlobalProfile { get; set; }
+    public List<DefensiveProfile> DefensiveProfile { get; set; }
+    public List<OffensiveProfile> OffensiveProfile { get; set; }
+    public bool IsMount { get; set; }
+    public string Name { get; set; }
 }

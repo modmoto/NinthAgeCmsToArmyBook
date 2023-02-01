@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using System.Reflection;
-using NinthAgeCmsToArmyBook.Model;
+using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Latex;
 using NUnit.Framework;
 
 namespace NinthAgeCmsToArmyBook.UnitTests;
@@ -33,37 +33,5 @@ public class RenderTests
         var latexRepository = new LatexRepository();
         var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\TexFiles";
         latexRepository.CreateLatex(directory, "hello-world.tex", "output_Vermin_Swarms.pdf");
-    }
-}
-
-public class LatexRepository
-{
-    public void CreateLatex(string path, string latexFileName, string targetFileName)
-    {
-        var process1 = new Process();
-        var startInfo = new ProcessStartInfo();
-        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-        startInfo.FileName = "cmd.exe";
-        startInfo.Arguments = $"C/ pdflatex -job-name=${targetFileName} {path}\\{latexFileName}";
-        process1.StartInfo = startInfo;
-        process1.Start();
-        // process1.WaitForExit();
-        
-        var process = new Process
-        {
-            StartInfo =
-            {
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                FileName = "CMD.exe",
-                WorkingDirectory = path,
-                Arguments = $"dir"
-                // Arguments = $"pdflatex -job-name=${targetFileName} {latexFileName}"
-            }
-        };
-        process.Start();
-        process.WaitForExit();
-        
-        Console.WriteLine(process.ExitCode);
     }
 }
