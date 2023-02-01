@@ -3,12 +3,29 @@
 <div class="accordion-item">
     <h2 class="accordion-header" id="@($"panels-heading-{Unit.GetHashCode()}")">
         <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@($"#panels-{Unit.GetHashCode()}")" aria-expanded="false" aria-controls="@($"panels-{Unit.GetHashCode()}")">
-            @Unit.Name @Unit.GetHashCode()
+            @Unit.Name
         </button>
     </h2>
     <div id="@($"panels-{Unit.GetHashCode()}")" aria-labelledby="@($"panels-heading-{Unit.GetHashCode()}")" class="accordion-collapse collapse">
         <div class="accordion-body">
             <table>
+                <tr>
+                    <td>
+                        <div class="input-group">
+                            <span class="input-group-text">Name</span>
+                            <input type="text" @oninput="e => Unit.Name = e.Value.ToString()" value="@Unit.Name" class="form-control" placeholder="Unit name" aria-label="Unit name">
+                        </div>
+                    </td>
+                    <td>
+                        <MinMaxEditBox Value="Unit.UnitSize" EditLabel="Models"/>
+                    </td>
+                    <td>
+                        <MinMaxEditBox Value="Unit.ModelsPerArmy" EditLabel="Mod/Army"/>
+                    </td>
+                    <td>
+                        <MinMaxEditBox Value="Unit.UnitsPerArmy" EditLabel="Unit/Army"/>
+                    </td>
+                </tr>
                 @foreach (var globalProfile in Unit.GlobalProfile)
                 {
                     <tr>
@@ -23,7 +40,7 @@
                         </td>
                         <td/>
                         <td/>
-                        
+
                     </tr>
                 }
                 @foreach (var defensiveProfile in Unit.DefensiveProfile)
