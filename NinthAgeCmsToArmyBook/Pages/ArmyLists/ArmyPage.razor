@@ -56,10 +56,12 @@
                 <span>add unit</span>
             </button>
         </div>
-        @foreach (var unit in SelectedBook.Units)
-        {
-            <UnitComponent unit="@unit"/>
-        }
+        <div class="accordion">
+            @foreach (var unit in SelectedBook.Units)
+            {
+                <UnitComponent unit="@unit"/>
+            }
+        </div>
     </div>
 }
 else

@@ -1,38 +1,75 @@
 ﻿@using NinthAgeCmsToArmyBook.ArmyBooks
-<details>
-    <summary>
-        @Unit.Name
-    </summary>
-    <table>
-        @foreach (var globalProfile in Unit.GlobalProfile)
-        {
-            <tr>
-                <td>Global</td>
-            </tr>
-            <tr>
-                <td>
-                    <ProfileEditBox EditLabel="Adv" Value="@globalProfile.Advance" OnEditState="newVal => globalProfile.Advance = newVal"/>
-                </td>
-                <td>
-                    <ProfileEditBox EditLabel="Mar" Value="@globalProfile.March" OnEditState="newVal => globalProfile.March = newVal"/>
-                </td>
-                <td>
-                    <ProfileEditBox EditLabel="Dis" Value="@globalProfile.Discipline" OnEditState="newVal => globalProfile.Discipline = newVal"/>
-                </td>
-            </tr>
-        }
 
-        <button class="btn btn-primary" @onclick="SaveProfile">Save Profile</button>
-    </table>
-</details>
+<div class="accordion-item">
+    <h2 class="accordion-header" id="@($"panels-heading-{Unit.GetHashCode()}")">
+        <button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="@($"#panels-{Unit.GetHashCode()}")" aria-expanded="false" aria-controls="@($"panels-{Unit.GetHashCode()}")">
+            @Unit.Name @Unit.GetHashCode()
+        </button>
+    </h2>
+    <div id="@($"panels-{Unit.GetHashCode()}")" aria-labelledby="@($"panels-heading-{Unit.GetHashCode()}")" class="accordion-collapse collapse">
+        <div class="accordion-body">
+            <table>
+                @foreach (var globalProfile in Unit.GlobalProfile)
+                {
+                    <tr>
+                        <td>
+                            <ProfileEditBox EditLabel="Adv" Value="@globalProfile.Advance" OnEditState="newVal => globalProfile.Advance = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Mar" Value="@globalProfile.March" OnEditState="newVal => globalProfile.March = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Dis" Value="@globalProfile.Discipline" OnEditState="newVal => globalProfile.Discipline = newVal"/>
+                        </td>
+                        <td/>
+                        <td/>
+                        
+                    </tr>
+                }
+                @foreach (var defensiveProfile in Unit.DefensiveProfile)
+                {
+                    <tr>
+                        <td>
+                            <ProfileEditBox EditLabel="HP" Value="@defensiveProfile.HealthPoints" OnEditState="newVal => defensiveProfile.HealthPoints = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Def" Value="@defensiveProfile.Defense" OnEditState="newVal => defensiveProfile.Defense = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Res" Value="@defensiveProfile.Resilience" OnEditState="newVal => defensiveProfile.Resilience = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Arm" Value="@defensiveProfile.Armor" OnEditState="newVal => defensiveProfile.Armor = newVal"/>
+                        </td>
+                        <td/>
+                    </tr>
+                }
+                @foreach (var offensiveProfile in Unit.OffensiveProfile)
+                {
+                    <tr>
+                        <td>
+                            <ProfileEditBox EditLabel="Att" Value="@offensiveProfile.Attacks" OnEditState="newVal => offensiveProfile.Attacks = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Off" Value="@offensiveProfile.Offense" OnEditState="newVal => offensiveProfile.Offense = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Str" Value="@offensiveProfile.Strength" OnEditState="newVal => offensiveProfile.Strength = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="AP" Value="@offensiveProfile.ArmorPiercing" OnEditState="newVal => offensiveProfile.ArmorPiercing = newVal"/>
+                        </td>
+                        <td>
+                            <ProfileEditBox EditLabel="Agi" Value="@offensiveProfile.Agility" OnEditState="newVal => offensiveProfile.Agility = newVal"/>
+                        </td>
+                    </tr>
+                }
+            </table>
+        </div>
+    </div>
+</div>
 
 @code {
-
     [Parameter]
     public Unit Unit { get; set; }
-
-    private void SaveProfile()
-    {
-    }
-
 }
