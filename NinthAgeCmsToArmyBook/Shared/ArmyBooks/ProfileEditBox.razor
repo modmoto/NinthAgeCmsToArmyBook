@@ -1,0 +1,21 @@
+﻿<div class="row">
+    <div class="input-group mb-3">
+        <span class="input-group-text">@EditLabel</span>
+        <input inputmode="numeric" pattern="[0-9]*" @oninput="OnInput" value="@Value" type="number" class="form-control" placeholder="@EditLabel" aria-label="@EditLabel">
+    </div>
+</div>
+
+@code {
+    [Parameter]
+    public int Value { get; set; }
+    [Parameter]
+    public string EditLabel { get; set; }
+    [Parameter]
+    public EventCallback<int> OnEditState { get; set; }
+
+    private void OnInput(ChangeEventArgs obj)
+    {
+        var newNumberValue = int.Parse(obj.Value?.ToString() ?? "0");
+        OnEditState.InvokeAsync(newNumberValue);
+    }
+}

@@ -1,4 +1,4 @@
-﻿namespace NinthAgeCmsToArmyBook.UnitTests;
+﻿namespace NinthAgeCmsToArmyBook.Model;
 
 public class ModelRule
 {

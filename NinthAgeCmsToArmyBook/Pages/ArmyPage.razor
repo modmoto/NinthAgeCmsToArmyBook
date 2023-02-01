@@ -1,0 +1,36 @@
+﻿@page "/army/{Id}"
+@using NinthAgeCmsToArmyBook.Model
+@using MongoDB.Bson
+
+<PageTitle>@_selectedArmyBook.ArmyName</PageTitle>
+
+<h1>@_selectedArmyBook.ArmyName</h1>
+<h2>Special Rules</h2>
+<h2>Units</h2>
+@foreach (var unit in _selectedArmyBook.Units)
+{
+    <UnitComponent unit="@unit" />
+}
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    
+    private ArmyBook _selectedArmyBook = new("Dread Elves", new List<Unit>
+    {
+        new("Obsidian Guard", new List<GlobalProfile>
+        {
+            new(5, 10, 9)
+        }, new List<DefensiveProfile>
+        {
+            new(1, 5, 3, 1)
+        }, new List<OffensiveProfile>
+        {
+            new(2, 6, 3, 0, 6)
+        }, false)
+    });
+
+    protected override void OnInitialized()
+    {
+    }
+}

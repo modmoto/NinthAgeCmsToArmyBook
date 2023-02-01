@@ -1,0 +1,38 @@
+﻿@using NinthAgeCmsToArmyBook.Model
+<details>
+    <summary>
+        @Unit.Name
+    </summary>
+    <table>
+        @foreach (var globalProfile in Unit.GlobalProfile)
+        {
+            <tr>
+                <td>Global</td>
+            </tr>
+            <tr>
+                <td>
+                    <ProfileEditBox EditLabel="Adv" Value="@globalProfile.Advance" OnEditState="newVal => globalProfile.Advance = newVal"/>
+                </td>
+                <td>
+                    <ProfileEditBox EditLabel="Mar" Value="@globalProfile.March" OnEditState="newVal => globalProfile.March = newVal"/>
+                </td>
+                <td>
+                    <ProfileEditBox EditLabel="Dis" Value="@globalProfile.Discipline" OnEditState="newVal => globalProfile.Discipline = newVal"/>
+                </td>
+            </tr>
+        }
+
+        <button class="btn btn-primary" @onclick="SaveProfile">Save Profile</button>
+    </table>
+</details>
+
+@code {
+
+    [Parameter]
+    public Unit Unit { get; set; }
+
+    private void SaveProfile()
+    {
+    }
+
+}

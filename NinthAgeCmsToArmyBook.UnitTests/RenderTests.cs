@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using System.Reflection;
+using NinthAgeCmsToArmyBook.Model;
 using NUnit.Framework;
 
 namespace NinthAgeCmsToArmyBook.UnitTests;
@@ -9,7 +10,6 @@ public class RenderTests
     [Test]
     public void BasicRenderingWorks()
     {
-        var armyBook = new ArmyBook();
         var globalProfiles = new List<GlobalProfile>
         {
             new(5, 10, 9)
@@ -22,8 +22,7 @@ public class RenderTests
         {
             new(1, 5, 4, 1, 6)
         };
-        var unit = new Unit(globalProfiles, defensiveProfiles, offensiveProfiles, false);
-        armyBook.AddUnit(unit);
+        var unit = new Unit("OBsGuard", globalProfiles, defensiveProfiles, offensiveProfiles, false);
 
         var latexRepository = new LatexRepository();
     }

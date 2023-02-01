@@ -1,0 +1,32 @@
+﻿@page "/armies"
+@using NinthAgeCmsToArmyBook.Model
+
+<PageTitle>Armies of the 9th Age</PageTitle>
+
+<h1>Armies</h1>
+@foreach (var army in _armies)
+{
+    <NavLink class="nav-link" href="@($"army/{army.Id}")" Match="NavLinkMatch.All">
+        @army.ArmyName
+    </NavLink>
+}
+
+@code {
+
+    private List<ArmyBook> _armies = new()
+    {
+        new("Dread Elves", new List<Unit>
+        {
+            new("Obsidian Guard", new List<GlobalProfile>
+            {
+                new(5, 10, 9)
+            }, new List<DefensiveProfile>
+            {
+                new(1, 5, 3, 1)
+            }, new List<OffensiveProfile>
+            {
+                new(2, 6, 3, 0, 6)
+            }, false)
+        })
+    };
+}
