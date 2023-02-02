@@ -9,6 +9,8 @@
     [Parameter]
     public string EditLabel { get; set; }
     [Parameter]
+    public string ToolTip { get; set; }
+    [Parameter]
     public EventCallback<int> OnEditState { get; set; }
 
     private void OnInput(ChangeEventArgs obj)
