@@ -61,7 +61,7 @@
                 <span>add unit</span>
             </button>
         </div>
-        <div class="accordion">
+        <div class="accordion mb-3">
             @foreach (var unit in SelectedBook.Units)
             {
                 <UnitComponent unit="@unit"/>
@@ -73,12 +73,14 @@
         <div class="col">
             <h2>Changes to last version</h2>
         </div>
-        <ul class="list-group accordion">
-            @foreach (var unit in ChangesToLastVersion)
-            {
-                <li class="list-group-item">@unit.Print()</li>
-            }
-        </ul>
+        <div class="accordion">
+            <ul class="list-group">
+                @foreach (var unit in ChangesToLastVersion)
+                {
+                    <li class="list-group-item">@unit.Print()</li>
+                }
+            </ul>
+        </div>
     </div>
 }
 else
