@@ -6,30 +6,14 @@ public class LatexRepository
 {
     public void CreateLatex(string path, string latexFileName, string targetFileName)
     {
-        var process1 = new Process();
-        var startInfo = new ProcessStartInfo();
-        startInfo.WindowStyle = ProcessWindowStyle.Hidden;
-        startInfo.FileName = "cmd.exe";
-        startInfo.Arguments = $"C/ pdflatex -job-name=${targetFileName} {path}\\{latexFileName}";
-        process1.StartInfo = startInfo;
-        process1.Start();
-        // process1.WaitForExit();
-        
-        var process = new Process
-        {
-            StartInfo =
+        var process = Process.Start(
+            new ProcessStartInfo
             {
+                RedirectStandardError = true,
                 RedirectStandardOutput = true,
-                UseShellExecute = false,
-                FileName = "CMD.exe",
-                WorkingDirectory = path,
-                Arguments = $"dir"
-                // Arguments = $"pdflatex -job-name=${targetFileName} {latexFileName}"
-            }
-        };
-        process.Start();
+                FileName = "/Library/TeX/texbin/pdflatex",
+                ArgumentList = { $"--output-directory={path}", $"-jobname={targetFileName}", $"{path}/{latexFileName}" }
+            });
         process.WaitForExit();
-        
-        Console.WriteLine(process.ExitCode);
     }
 }

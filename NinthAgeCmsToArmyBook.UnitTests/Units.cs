@@ -16,15 +16,5 @@ public class Units
         
         var init2 = Unit.Init(new List<Unit> { unit, init });
         Assert.That(init2.Name, Is.EqualTo("new unit 2"));
-
-    }
-
-    [Test]
-    [Ignore("not ready")]
-    public void CreatePdfWorks()
-    {
-        var latexRepository = new LatexRepository();
-        var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}\\TexFiles";
-        latexRepository.CreateLatex(directory, "hello-world.tex", "output_Vermin_Swarms.pdf");
     }
 }
