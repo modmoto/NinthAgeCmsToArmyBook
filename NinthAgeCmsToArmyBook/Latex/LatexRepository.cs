@@ -4,8 +4,10 @@ namespace NinthAgeCmsToArmyBook.Latex;
 
 public class LatexRepository
 {
-    public void CreateLatex(string path, string texFilePath)
+    public void CreateLatex(string texFilePath)
     {
+        var pathParts = texFilePath.Split("/").SkipLast(1);
+        var basePath = string.Join("/", pathParts);
         var process = Process.Start(
             new ProcessStartInfo
             {
@@ -13,7 +15,7 @@ public class LatexRepository
                 RedirectStandardOutput = true,
                 FileName = "/usr/bin/pdflatex",
                 // FileName = "/Library/TeX/texbin/pdflatex",
-                ArgumentList = { $"--output-directory={path}", texFilePath }
+                ArgumentList = { $"--output-directory={basePath}", texFilePath }
             });
         process.WaitForExit();
     }

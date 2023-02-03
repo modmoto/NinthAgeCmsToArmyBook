@@ -156,9 +156,8 @@ else
 
     private async Task DownloadPdfFile()
     {
-        var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}";
         await CreateTexFile(Army.ArmyName, SelectedBook);
-        LatexRepository.CreateLatex(directory, GetTexFilePath());
+        LatexRepository.CreateLatex(GetTexFilePath());
         await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
     }
 

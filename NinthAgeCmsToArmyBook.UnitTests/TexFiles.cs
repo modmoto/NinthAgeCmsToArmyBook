@@ -14,7 +14,7 @@ public class TexFiles
         var latexRepository = new LatexRepository();
         var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/TexFiles";
         var outputVerminSwarmsPdf = "output_Vermin_Swarms";
-        latexRepository.CreateLatex(directory, "hello-world.tex");
+        latexRepository.CreateLatex("hello-world.tex");
 
         var expectedPath = $"{directory}/{outputVerminSwarmsPdf}.pdf";
         Assert.IsTrue(File.Exists(expectedPath));
