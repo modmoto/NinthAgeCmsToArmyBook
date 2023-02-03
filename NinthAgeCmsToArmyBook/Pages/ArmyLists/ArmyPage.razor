@@ -2,6 +2,8 @@
 @using MongoDB.Bson
 @using NinthAgeCmsToArmyBook.ArmyBooks
 @using NinthAgeCmsToArmyBook.Changes
+@using NinthAgeCmsToArmyBook.Latex
+@using System.Reflection
 
 @if (Army != null)
 {
@@ -82,6 +84,19 @@
             </ul>
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-success float-end" @onclick="DownloadPdfFile">
+                <span class="oi oi-plus"></span>
+                <span>download pdf</span>
+            </button>
+            <button class="btn btn-outline-success float-end" @onclick="DownloadTexFile">
+                <span class="oi oi-plus"></span>
+                <span>download latex</span>
+            </button>
+        </div>
+    </div>
 }
 else
 {
@@ -90,6 +105,8 @@ else
 
 @inject ArmyRepository ArmyRepository
 @inject ChangeManager ChangeManager
+@inject LatexRepository LatexRepository
+@inject IJSRuntime JsRuntime
 
 @code {
     [Parameter]
@@ -136,4 +153,74 @@ else
             Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
         }
     }
+
+    private async Task DownloadPdfFile()
+    {
+        var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}";
+        var fileName = $"{Army.ArmyName}_{SelectedBook.Version}";
+        await CreateTexFile(Army.ArmyName, SelectedBook);
+        LatexRepository.CreateLatex(directory, TempTexFileLocation, fileName);
+        await DownloadFile(fileName, $"{fileName}.pdf");
+    }
+
+    private async Task DownloadTexFile()
+    {
+        var fileName = $"{Army.ArmyName}_{SelectedBook.Version}.latex";
+        await CreateTexFile(Army.ArmyName, SelectedBook);
+        await DownloadFile(TempTexFileLocation, fileName);
+    }
+
+    private async Task CreateTexFile(string armyName, ArmyBook selectedBook)
+    {
+        var texContent = $@"\documentclass[12pt]{{article}}
+\begin{{document}}
+\title{{{armyName}}}
+\author{{Army Book (Core Rules)}}
+\date{{2\textsuperscript{{nd}} Edition, version 2022 {selectedBook.Version} - \today}}
+
+\maketitle
+\section*{{Special Rules}}
+
+\section*{{Units}}
+";
+        foreach (var selectedBookUnit in selectedBook.Units)
+        {
+            var unitContent = $@"\subsection*{{{selectedBookUnit.Name}}}
+\textbf{{{selectedBookUnit.BaseCost}}} pts + \textbf{{{selectedBookUnit.AdditionalCost}}} pts/extra model,  \textbf{{{selectedBookUnit.UnitSize.Min}-{selectedBookUnit.UnitSize.Max}}} models, {selectedBookUnit.ModelsPerArmy.Min}-{selectedBookUnit.ModelsPerArmy.Min} models/army
+\begin{{center}}
+\begin{{tabular}}{{p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}}}
+ Adv & Mar & Dis & & \\ 
+ {selectedBookUnit.GlobalProfile.First().Advance}"" & {selectedBookUnit.GlobalProfile.First().March}"" & {selectedBookUnit.GlobalProfile.First().Discipline} & & \\ 
+ \hline
+ HP & Def & Res & Arm & \\ 
+ {selectedBookUnit.DefensiveProfile.First().HealthPoints} & {selectedBookUnit.DefensiveProfile.First().Defense} & {selectedBookUnit.DefensiveProfile.First().Resilience} & {selectedBookUnit.DefensiveProfile.First().Armor} & \\ 
+ \hline
+ Att & Of & Str & AP & Agi \\ 
+ {selectedBookUnit.OffensiveProfile.First().Attacks} & {selectedBookUnit.OffensiveProfile.First().Offense} & {selectedBookUnit.OffensiveProfile.First().Strength} & {selectedBookUnit.OffensiveProfile.First().ArmorPiercing} & {selectedBookUnit.OffensiveProfile.First().Agility} \\ 
+\end{{tabular}}
+\end{{center}}";
+            texContent += unitContent;
+        }
+        texContent += "\\end{document}";
+        
+        if (!File.Exists(TempTexFileLocation))
+        {
+            var handle = File.Create(TempTexFileLocation);
+            await handle.FlushAsync();
+            await handle.DisposeAsync();
+        }
+        await File.WriteAllTextAsync(TempTexFileLocation, texContent);
+    }
+
+    private async Task DownloadFile(string fileLocation, string fileName)
+    {
+        var bytesFromFile = await File.ReadAllBytesAsync(fileLocation);
+        var fileStream = new MemoryStream(bytesFromFile);
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+
+    private string TempTexFileLocation = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/temp.tex";
 }
