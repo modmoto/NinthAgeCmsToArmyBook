@@ -157,17 +157,31 @@ else
     private async Task DownloadPdfFile()
     {
         var directory = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}";
-        var fileName = $"{Army.ArmyName}_{SelectedBook.Version}";
         await CreateTexFile(Army.ArmyName, SelectedBook);
-        LatexRepository.CreateLatex(directory, TempTexFileLocation, fileName);
-        await DownloadFile(fileName, $"{fileName}.pdf");
+        LatexRepository.CreateLatex(directory, GetTexFilePath());
+        await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
+    }
+
+    private string GetPdfFilePath()
+    {
+        return GetFilePath("pdf");
+    }
+
+    private string GetFileName()
+    {
+        return $"{Army.ArmyName.Replace(" ", "_")}_{SelectedBook.Version}";
     }
 
     private async Task DownloadTexFile()
     {
-        var fileName = $"{Army.ArmyName}_{SelectedBook.Version}.latex";
         await CreateTexFile(Army.ArmyName, SelectedBook);
-        await DownloadFile(TempTexFileLocation, fileName);
+        await DownloadFile(GetTexFilePath(), $"{GetFileName()}.tex");
+    }
+
+    public string GetFilePath(string suffix)
+    {
+        var filePath = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{GetFileName()}.{suffix}";
+        return filePath;
     }
 
     private async Task CreateTexFile(string armyName, ArmyBook selectedBook)
@@ -202,14 +216,20 @@ else
             texContent += unitContent;
         }
         texContent += "\\end{document}";
-        
-        if (!File.Exists(TempTexFileLocation))
+
+        var filePath = GetTexFilePath();
+        if (!File.Exists(filePath))
         {
-            var handle = File.Create(TempTexFileLocation);
+            var handle = File.Create(filePath);
             await handle.FlushAsync();
             await handle.DisposeAsync();
         }
-        await File.WriteAllTextAsync(TempTexFileLocation, texContent);
+        await File.WriteAllTextAsync(filePath, texContent);
+    }
+
+    private string GetTexFilePath()
+    {
+        return GetFilePath("tex");
     }
 
     private async Task DownloadFile(string fileLocation, string fileName)
@@ -221,6 +241,4 @@ else
 
         await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
     }
-
-    private string TempTexFileLocation = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/temp.tex";
 }
