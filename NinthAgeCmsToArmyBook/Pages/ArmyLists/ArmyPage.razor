@@ -1,6 +1,7 @@
 ﻿@page "/army/{Id}"
 @using MongoDB.Bson
 @using NinthAgeCmsToArmyBook.ArmyBooks
+@using NinthAgeCmsToArmyBook.Changes
 
 @if (Army != null)
 {
@@ -67,6 +68,18 @@
             }
         </div>
     </div>
+    
+    <div class="row">
+        <div class="col">
+            <h2>Changes to last version</h2>
+        </div>
+        <ul class="list-group accordion">
+            @foreach (var unit in ChangesToLastVersion)
+            {
+                <li class="list-group-item">@unit.Print()</li>
+            }
+        </ul>
+    </div>
 }
 else
 {
@@ -74,6 +87,7 @@ else
 }
 
 @inject ArmyRepository ArmyRepository
+@inject ChangeManager ChangeManager
 
 @code {
     [Parameter]
@@ -81,17 +95,22 @@ else
     public ArmyVersions Army { get; set; }
     public ArmyBook SelectedBook { get; set; }
     public bool DidSaveCorrect { get; set; } = true;
+    public List<UnitChange> ChangesToLastVersion { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
         Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
         SelectedBook = Army.Versions.Last();
+        var armyBooks = Army.Versions.SkipLast(1);
+        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, armyBooks.LastOrDefault());
     }
 
     private void SelectVersion(ArmyBook armyBook)
     {
         SelectedBook = armyBook;
+        var smallerVersions = Army.Versions.Where(a => string.CompareOrdinal(a.Version, armyBook.Version) < 0);
+        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, smallerVersions.LastOrDefault());
     }
 
     private void CreateNewVersion()
@@ -103,7 +122,7 @@ else
 
     private void AddUnit()
     {
-        SelectedBook.Units.Add(Unit.Init());
+        SelectedBook.Units.Add(Unit.Init(SelectedBook.Units));
     }
 
     private async Task SaveArmy()

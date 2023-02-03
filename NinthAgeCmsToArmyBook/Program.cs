@@ -1,5 +1,6 @@
 using MongoDB.Driver;
 using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Changes;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -7,6 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<ArmyRepository>();
+builder.Services.AddTransient<ChangeManager>();
 
 builder.Services.AddSingleton(_ =>
 {
