@@ -11,7 +11,7 @@ public class LatexRepository
             {
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
-                FileName = "/Library/TeX/texbin/pdflatex",
+                FileName = "/usr/bin/pdflatex",
                 ArgumentList = { $"--output-directory={path}", $"-jobname={targetFileName}", $"{path}/{latexFileName}" }
             });
         process.WaitForExit();
