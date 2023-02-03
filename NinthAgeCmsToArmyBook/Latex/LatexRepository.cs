@@ -15,6 +15,7 @@ public class LatexRepository
                 RedirectStandardOutput = true,
                 FileName = "/usr/bin/pdflatex",
                 // FileName = "/Library/TeX/texbin/pdflatex",
+                // FileName = "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
                 ArgumentList = { $"--output-directory={basePath}", texFilePath }
             });
         process.WaitForExit();
