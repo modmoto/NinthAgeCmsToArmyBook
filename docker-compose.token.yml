@@ -8,6 +8,7 @@ services:
       - 80
     environment:
       - MONGO_DB_CONNECTION_STRING=${MONGO_DB_CONNECTION_STRING}
+      - LATEX_EXECUTABLE_PATH=${LATEX_EXECUTABLE_PATH}
 
   mongo-db:
     image: mongo

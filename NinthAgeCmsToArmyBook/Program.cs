@@ -18,6 +18,9 @@ builder.Services.AddSingleton(_ =>
     return new MongoClient(mongoConnectionString);
 });
 
+var latexExecutablePath = Environment.GetEnvironmentVariable("LATEX_EXECUTABLE_PATH");
+builder.Services.AddSingleton(new LatexConfiguration(latexExecutablePath));
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

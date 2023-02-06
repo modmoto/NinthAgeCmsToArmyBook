@@ -4,6 +4,13 @@ namespace NinthAgeCmsToArmyBook.Latex;
 
 public class LatexRepository
 {
+    private readonly LatexConfiguration _latexConfiguration;
+
+    public LatexRepository(LatexConfiguration latexConfiguration)
+    {
+        _latexConfiguration = latexConfiguration;
+    }
+    
     public void CreateLatex(string texFilePath)
     {
         var pathParts = texFilePath.Split("/").SkipLast(1);
@@ -13,11 +20,18 @@ public class LatexRepository
             {
                 RedirectStandardError = true,
                 RedirectStandardOutput = true,
-                FileName = "/usr/bin/pdflatex",
-                // FileName = "/Library/TeX/texbin/pdflatex",
-                // FileName = "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
+                FileName = _latexConfiguration.LatexExecutablePath,
                 ArgumentList = { $"--output-directory={basePath}", texFilePath }
             });
         process.WaitForExit();
     }
+}
+
+public class LatexConfiguration
+{
+    public LatexConfiguration(string latexExecutablePath)
+    {
+        LatexExecutablePath = latexExecutablePath;
+    }
+    public string LatexExecutablePath { get; }
 }
