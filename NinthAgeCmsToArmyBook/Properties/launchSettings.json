@@ -17,7 +17,8 @@
         "ASPNETCORE_ENVIRONMENT": "Development",
         "LATEX_EXECUTABLE_PATH": "/Library/TeX/texbin/pdflatex",
         "Y_LATEX_EXECUTABLE_PATH": "/usr/bin/pdflatex",
-        "X_LATEX_EXECUTABLE_PATH": "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex"
+        "X_LATEX_EXECUTABLE_PATH": "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
+        "MONGO_DB_CONNECTION_STRING": "mongodb://admin:i1vP7vw5FoCup9VlNaC9@65.21.139.246:3001"
       }
     },
     "IIS Express": {
