@@ -11,6 +11,7 @@ builder.Services.AddServerSideBlazor();
 builder.Services.AddTransient<ArmyRepository>();
 builder.Services.AddTransient<ChangeManager>();
 builder.Services.AddTransient<LatexRepository>();
+builder.Services.AddTransient<TexTransformer>();
 
 builder.Services.AddSingleton(_ =>
 {

@@ -107,6 +107,7 @@ else
 @inject ChangeManager ChangeManager
 @inject LatexRepository LatexRepository
 @inject IJSRuntime JsRuntime
+@inject TexTransformer TexTransformer
 
 @code {
     [Parameter]
@@ -156,8 +157,8 @@ else
 
     private async Task DownloadPdfFile()
     {
-        await CreateTexFile(Army.ArmyName, SelectedBook);
-        LatexRepository.CreateLatex(GetTexFilePath());
+        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
+        LatexRepository.CreatePdf(GetTexFilePath());
         await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
     }
 
@@ -173,7 +174,7 @@ else
 
     private async Task DownloadTexFile()
     {
-        await CreateTexFile(Army.ArmyName, SelectedBook);
+        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
         await DownloadFile(GetTexFilePath(), $"{GetFileName()}.tex");
     }
 
@@ -181,49 +182,6 @@ else
     {
         var filePath = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{GetFileName()}.{suffix}";
         return filePath;
-    }
-
-    private async Task CreateTexFile(string armyName, ArmyBook selectedBook)
-    {
-        var texContent = $@"\documentclass[12pt]{{article}}
-\begin{{document}}
-\title{{{armyName}}}
-\author{{Army Book (Core Rules)}}
-\date{{2\textsuperscript{{nd}} Edition, version 2022 {selectedBook.Version} - \today}}
-
-\maketitle
-\section*{{Special Rules}}
-
-\section*{{Units}}
-";
-        foreach (var selectedBookUnit in selectedBook.Units)
-        {
-            var unitContent = $@"\subsection*{{{selectedBookUnit.Name}}}
-\textbf{{{selectedBookUnit.BaseCost}}} pts + \textbf{{{selectedBookUnit.AdditionalCost}}} pts/extra model,  \textbf{{{selectedBookUnit.UnitSize.Min}-{selectedBookUnit.UnitSize.Max}}} models, {selectedBookUnit.ModelsPerArmy.Min}-{selectedBookUnit.ModelsPerArmy.Min} models/army
-\begin{{center}}
-\begin{{tabular}}{{p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}p{{0.17\textwidth}}}}
- Adv & Mar & Dis & & \\ 
- {selectedBookUnit.GlobalProfile.First().Advance}"" & {selectedBookUnit.GlobalProfile.First().March}"" & {selectedBookUnit.GlobalProfile.First().Discipline} & & \\ 
- \hline
- HP & Def & Res & Arm & \\ 
- {selectedBookUnit.DefensiveProfile.First().HealthPoints} & {selectedBookUnit.DefensiveProfile.First().Defense} & {selectedBookUnit.DefensiveProfile.First().Resilience} & {selectedBookUnit.DefensiveProfile.First().Armor} & \\ 
- \hline
- Att & Of & Str & AP & Agi \\ 
- {selectedBookUnit.OffensiveProfile.First().Attacks} & {selectedBookUnit.OffensiveProfile.First().Offense} & {selectedBookUnit.OffensiveProfile.First().Strength} & {selectedBookUnit.OffensiveProfile.First().ArmorPiercing} & {selectedBookUnit.OffensiveProfile.First().Agility} \\ 
-\end{{tabular}}
-\end{{center}}";
-            texContent += unitContent;
-        }
-        texContent += "\\end{document}";
-
-        var filePath = GetTexFilePath();
-        if (!File.Exists(filePath))
-        {
-            var handle = File.Create(filePath);
-            await handle.FlushAsync();
-            await handle.DisposeAsync();
-        }
-        await File.WriteAllTextAsync(filePath, texContent);
     }
 
     private string GetTexFilePath()

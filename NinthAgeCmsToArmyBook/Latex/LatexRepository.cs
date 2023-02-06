@@ -11,7 +11,7 @@ public class LatexRepository
         _latexConfiguration = latexConfiguration;
     }
     
-    public void CreateLatex(string texFilePath)
+    public void CreatePdf(string texFilePath)
     {
         var pathParts = texFilePath.Split("/").SkipLast(1);
         var basePath = string.Join("/", pathParts);
