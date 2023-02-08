@@ -2,19 +2,25 @@
 \textbf{ {{BaseCost}} } pts + \textbf{ {{AdditionalCost}} } pts/extra model,  \textbf{ {{UnitSize.Min}}-{{UnitSize.Max}} } models, {{ModelsPerArmy.Min}}-{{ModelsPerArmy.Min}} models/army
 \begin{center}
 \begin{tabular}{p{0.17\textwidth}p{0.17\textwidth}p{0.17\textwidth}p{0.17\textwidth}p{0.17\textwidth}}
-    Adv & Mar & Dis & & \\ 
-    {{ for gp in GlobalProfile }}
-        {{gp.Advance}}" & {{gp.March}}" & {{gp.Discipline}} & & \\ 
-    {{ end }}
+
+Adv & Mar & Dis & & \\ 
+{{ for gp in GlobalProfile }}
+    {{gp.Advance}}" & {{gp.March}}" & {{gp.Discipline}} & & \\ 
+{{ end }}
+
 \hline
-    HP & Def & Res & Arm & \\ 
-    {{ for dp in DefensiveProfile }}
-        {{dp.HealthPoints}}" & {{dp.Defense}}" & {{dp.Resilience}} & {{dp.Armor}} & \\ 
-    {{ end }}
+
+HP & Def & Res & Arm & \\ 
+{{ for dp in DefensiveProfile }}
+    {{dp.HealthPoints}}" & {{dp.Defense}}" & {{dp.Resilience}} & {{dp.Armor}} & \\ 
+{{ end }}
+
 \hline
-    Att & Of & Str & AP & Agi \\ 
-    {{ for op in OffensiveProfile }}
-        {{op.Attacks}} & {{op.Offense}} & {{op.Strength}} & {{op.ArmorPiercing}} & {{op.Agility}} \\ 
-    {{ end }}
-\end{{tabular}}
-\end{{center}}
+
+Att & Of & Str & AP & Agi \\ 
+{{ for op in OffensiveProfile }}
+    {{op.Attacks}} & {{op.Offense}} & {{op.Strength}} & {{op.ArmorPiercing}} & {{op.Agility}} \\ 
+{{ end }}
+
+\end{tabular}
+\end{center}

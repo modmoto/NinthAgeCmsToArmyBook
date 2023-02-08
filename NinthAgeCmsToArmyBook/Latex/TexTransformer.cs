@@ -11,14 +11,14 @@ public class TexTransformer
     public const string BaseFolder = "Latex/TemplateFiles";
     public async Task CreateTexFile(string armyName, ArmyBook selectedBook, string targetPath)
     {
-        var content = String.Empty;
+        var unitContent = string.Empty;
         foreach (var selectedBookUnit in selectedBook.Units)
         {
             var unitEntry = await RenderTemplate("UnitEntry", selectedBookUnit);
-            content += unitEntry;
+            unitContent += unitEntry;
         }
         
-        var bodyContentRender = await RenderTemplate("MainDocument", new { ArmyName = armyName, selectedBook.Version, Content = content});
+        var bodyContentRender = await RenderTemplate("MainDocument", new { ArmyName = armyName, selectedBook.Version, UnitContent = unitContent});
 
         if (!File.Exists(targetPath))
         {
