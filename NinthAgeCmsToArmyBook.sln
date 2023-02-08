@@ -11,6 +11,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		azure-pipelines.yml = azure-pipelines.yml
 		docker-compose.token.yml = docker-compose.token.yml
 		Dockerfile = Dockerfile
+		setup-tex-live.sh = setup-tex-live.sh
 	EndProjectSection
 EndProject
 Global

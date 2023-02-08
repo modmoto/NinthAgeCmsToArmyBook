@@ -16,7 +16,9 @@ RUN dotnet publish "NinthAgeCmsToArmyBook.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
-RUN apt update && apt install -y texlive-full
+COPY setup-tex-live.sh .
+RUN chmod +x ./setup-tex-live.sh
+RUN ./setup-tex-live.sh
 
 WORKDIR /app
 COPY --from=publish /app/publish .
