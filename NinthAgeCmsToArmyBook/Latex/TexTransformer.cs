@@ -18,7 +18,7 @@ public class TexTransformer
             content += unitEntry;
         }
         
-        var bodyContentRender = await RenderTemplate("MainDocument", new { armyName, selectedBook.Version, content});
+        var bodyContentRender = await RenderTemplate("MainDocument", new { ArmyName = armyName, selectedBook.Version, Content = content});
 
         if (!File.Exists(targetPath))
         {
