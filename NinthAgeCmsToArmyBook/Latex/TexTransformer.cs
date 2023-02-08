@@ -1,6 +1,7 @@
 using System.Reflection;
 using NinthAgeCmsToArmyBook.ArmyBooks;
 using Scriban;
+using Scriban.Runtime;
 
 namespace NinthAgeCmsToArmyBook.Latex;
 
@@ -33,6 +34,6 @@ public class TexTransformer
         var filePath = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{BaseFolder}/{templateName}.tex";
         var readAllTextAsync = await File.ReadAllTextAsync(filePath);
         var template = Template.Parse(readAllTextAsync);
-        return await template.RenderAsync(content);
+        return await template.RenderAsync(content, (MemberRenamerDelegate)(member => member.Name));
     }
 }
