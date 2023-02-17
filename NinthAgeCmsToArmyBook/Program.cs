@@ -1,9 +1,31 @@
+using System.Reflection;
 using MongoDB.Driver;
 using NinthAgeCmsToArmyBook.ArmyBooks;
 using NinthAgeCmsToArmyBook.Changes;
 using NinthAgeCmsToArmyBook.Latex;
+using Serilog;
+using Serilog.Sinks.Elasticsearch;
 
 var builder = WebApplication.CreateBuilder(args);
+builder.Host.UseSerilog((context, configuration) =>
+{
+    var executingAssembly = Assembly.GetExecutingAssembly().GetName().Name?.Replace(".", "-");
+    configuration.Enrich.FromLogContext()
+        .Enrich.WithMachineName()
+        .Enrich.WithCorrelationId()
+        .Enrich.WithAssemblyName()
+        .WriteTo.Console()
+        .WriteTo.Elasticsearch(new ElasticsearchSinkOptions(new Uri(Environment.GetEnvironmentVariable("ELASTIC_URL")!))
+        {
+            ModifyConnectionSettings = x => x.BasicAuthentication("elastic", Environment.GetEnvironmentVariable("ELASTIC_SECRET")),
+            IndexFormat = $"{executingAssembly}-logs-{DateTime.UtcNow:yyyy-MM}",
+            AutoRegisterTemplate = true,
+            NumberOfShards = 2,
+            NumberOfReplicas = 1
+        })
+        .Enrich.WithProperty("Environment", context.HostingEnvironment.EnvironmentName)
+        .ReadFrom.Configuration(context.Configuration);
+});
 
 // Add services to the container.
 builder.Services.AddRazorPages();
