@@ -9,6 +9,8 @@ services:
     environment:
       - MONGO_DB_CONNECTION_STRING=${MONGO_DB_CONNECTION_STRING}
       - LATEX_EXECUTABLE_PATH=${LATEX_EXECUTABLE_PATH}
+      - ELASTIC_URL=${ELASTIC_URL}
+      - ELASTIC_SECRET=${ELASTIC_SECRET}
 
   mongo-db:
     image: mongo
