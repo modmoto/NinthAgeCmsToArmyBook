@@ -19,6 +19,7 @@ public class ArmiesController : ControllerBase
     [HttpGet]
     public async Task<ActionResult<IEnumerable<ArmyBook>>> Get()
     {
-        return Ok(await _armyRepository.LoadArmies());
+        var armyVersionsList = await _armyRepository.LoadArmies();
+        return Ok(armyVersionsList);
     }
 }
