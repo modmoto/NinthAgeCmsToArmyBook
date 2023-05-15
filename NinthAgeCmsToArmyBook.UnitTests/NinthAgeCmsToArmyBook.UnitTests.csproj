@@ -17,7 +17,8 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\NinthAgeCmsToArmyBook\NinthAgeCmsToArmyBook.csproj" />
+      <ProjectReference Include="..\NinthAgeCmsToArmyBook.Shared\NinthAgeCmsToArmyBook.Shared.csproj" />
+      <ProjectReference Include="..\NinthAgeCmsToArmyBookVnext\Shared\NinthAgeCmsToArmyBook.Shared.csproj" />
     </ItemGroup>
 
     <ItemGroup>

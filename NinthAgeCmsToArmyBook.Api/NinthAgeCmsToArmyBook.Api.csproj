@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk.Web">
+
+    <PropertyGroup>
+        <TargetFramework>net6.0</TargetFramework>
+    </PropertyGroup>
+
+    <ItemGroup>
+        <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly.Server" Version="6.0.16" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <ProjectReference Include="..\NinthAgeCmsToArmyBook.Shared\NinthAgeCmsToArmyBook.Shared.csproj" />
+        <ProjectReference Include="..\NinthAgeCmsToArmyBook.WebApp\NinthAgeCmsToArmyBook.WebApp.csproj" />
+    </ItemGroup>
+
+</Project>

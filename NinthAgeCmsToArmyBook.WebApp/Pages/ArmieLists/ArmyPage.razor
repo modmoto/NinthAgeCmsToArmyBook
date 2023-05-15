@@ -1,0 +1,202 @@
+﻿@page "/army/{Id}"
+@using MongoDB.Bson
+@using NinthAgeCmsToArmyBook.ArmyBooks
+@using NinthAgeCmsToArmyBook.Changes
+@using NinthAgeCmsToArmyBook.Latex
+@using System.Reflection
+@using System.IO
+
+@if (Army != null)
+{
+    <PageTitle>@Army.ArmyName (@SelectedBook.Version)</PageTitle>
+    
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-outline-success float-end mb-2" @onclick="CreateNewVersion">
+                <span class="oi oi-plus me-2"></span>
+                <span>new version</span>
+            </button>    
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="dropdown float-end mb-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSeason" data-bs-toggle="dropdown" aria-expanded="false">
+                    Switch version
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSeason">
+                    @foreach (var armyBook in Army.Versions.AsEnumerable().Reverse())
+                    {
+                        <li>
+                            <a class="dropdown-item" @onclick="() => SelectVersion(armyBook)">@armyBook.Version</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1>@Army.ArmyName (@SelectedBook.Version)</h1>
+        </div>
+        <div class="col">
+            <button class="btn btn-success float-end" @onclick="SaveArmy">
+                <span class="oi oi-file me-2"></span>
+                @if (DidSaveCorrect)
+                {
+                    <span>Save changes</span>
+                }
+                else
+                {
+                    <span>Someone else saved, changes reverted</span>
+                }
+            </button>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <h2>Units</h2>
+        </div>
+        <div class="col">
+            <button class="btn btn-outline-success float-end" @onclick="AddUnit">
+                <span class="oi oi-plus"></span>
+                <span>add unit</span>
+            </button>
+        </div>
+        <div class="accordion mb-3">
+            @foreach (var unit in SelectedBook.Units)
+            {
+                <UnitComponent unit="@unit"/>
+            }
+        </div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col">
+            <h2>Changes to last version</h2>
+        </div>
+        <div class="accordion">
+            <ul class="list-group">
+                @foreach (var unit in ChangesToLastVersion)
+                {
+                    <li class="list-group-item">@unit.Print()</li>
+                }
+            </ul>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-success float-end" @onclick="DownloadPdfFile">
+                <span class="oi oi-plus"></span>
+                <span>download pdf</span>
+            </button>
+            <button class="btn btn-outline-success float-end me-2" @onclick="DownloadTexFile">
+                <span class="oi oi-plus"></span>
+                <span>download latex</span>
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+@inject ArmyRepository ArmyRepository
+@inject ChangeManager ChangeManager
+@inject LatexRepository LatexRepository
+@inject IJSRuntime JsRuntime
+@inject TexTransformer TexTransformer
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public ArmyVersions Army { get; set; }
+    public ArmyBook SelectedBook { get; set; }
+    public bool DidSaveCorrect { get; set; } = true;
+    public List<UnitChange> ChangesToLastVersion { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
+        SelectedBook = Army.Versions.Last();
+        var armyBooks = Army.Versions.SkipLast(1);
+        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, armyBooks.LastOrDefault());
+    }
+
+    private void SelectVersion(ArmyBook armyBook)
+    {
+        SelectedBook = armyBook;
+        var smallerVersions = Army.Versions.Where(a => string.CompareOrdinal(a.Version, armyBook.Version) < 0);
+        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, smallerVersions.LastOrDefault());
+    }
+
+    private void CreateNewVersion()
+    {
+        var armyBook = Army.Versions.Last().Clone();
+        Army.Versions.Add(armyBook);
+        SelectedBook = armyBook;
+    }
+
+    private void AddUnit()
+    {
+        SelectedBook.Units.Add(Unit.Init(SelectedBook.Units));
+    }
+
+    private async Task SaveArmy()
+    {
+        DidSaveCorrect = true;
+        DidSaveCorrect = await ArmyRepository.Update(Army);
+        if (!DidSaveCorrect)
+        {
+            Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
+        }
+    }
+
+    private async Task DownloadPdfFile()
+    {
+        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
+        LatexRepository.CreatePdf(GetTexFilePath());
+        await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
+    }
+
+    private string GetPdfFilePath()
+    {
+        return GetFilePath("pdf");
+    }
+
+    private string GetFileName()
+    {
+        return $"{Army.ArmyName.Replace(" ", "_")}_{SelectedBook.Version}";
+    }
+
+    private async Task DownloadTexFile()
+    {
+        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
+        await DownloadFile(GetTexFilePath(), $"{GetFileName()}.tex");
+    }
+
+    public string GetFilePath(string suffix)
+    {
+        var filePath = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{GetFileName()}.{suffix}";
+        return filePath;
+    }
+
+    private string GetTexFilePath()
+    {
+        return GetFilePath("tex");
+    }
+
+    private async Task DownloadFile(string fileLocation, string fileName)
+    {
+        var bytesFromFile = await File.ReadAllBytesAsync(fileLocation);
+        var fileStream = new MemoryStream(bytesFromFile);
+
+        using var streamRef = new DotNetStreamReference(stream: fileStream);
+
+        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+    }
+}
