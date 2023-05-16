@@ -1,4 +1,4 @@
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using NUnit.Framework;
 
 namespace NinthAgeCmsToArmyBook.UnitTests;

@@ -1,29 +1,23 @@
 ﻿@page "/armies"
-@using NinthAgeCmsToArmyBook.ArmyBooks
-@using System.Text.Json
-@using NinthAgeCmsToArmyBook.Api
+@using NinthAgeCmsToArmyBook.Shared.ArmyBooks
 
 <PageTitle>Armies of the 9th Age</PageTitle>
 
 <h1>Armies</h1>
 @foreach (var army in _armies)
 {
-    <NavLink class="nav-link" href="@($"army/{army.Id}")" Match="NavLinkMatch.All">
+    <NavLink class="nav-link" href="@($"army/{army.ArmyId}")" Match="NavLinkMatch.All">
         @army.ArmyName
     </NavLink>
 }
 
 @inject HttpClient Client
-@inject JsonSerializerOptions SerializerOptions
 
 @code {
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-
-        var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
-        jsonSerializerOptions.Converters.Add(new ObjectIdConverter());
-        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("Armies", jsonSerializerOptions);
+        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("Armies");
     }
 
     private List<ArmyVersions> _armies = new();

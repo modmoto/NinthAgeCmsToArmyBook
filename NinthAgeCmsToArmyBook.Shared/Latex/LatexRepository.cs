@@ -1,7 +1,7 @@
 using System.Diagnostics;
 using System.Linq;
 
-namespace NinthAgeCmsToArmyBook.Latex;
+namespace NinthAgeCmsToArmyBook.Shared.Latex;
 
 public class LatexRepository
 {

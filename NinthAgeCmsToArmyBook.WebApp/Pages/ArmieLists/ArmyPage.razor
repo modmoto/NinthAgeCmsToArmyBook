@@ -1,10 +1,8 @@
 ﻿@page "/army/{Id}"
-@using MongoDB.Bson
-@using NinthAgeCmsToArmyBook.ArmyBooks
-@using NinthAgeCmsToArmyBook.Changes
-@using NinthAgeCmsToArmyBook.Latex
 @using System.Reflection
 @using System.IO
+@using NinthAgeCmsToArmyBook.Shared.ArmyBooks
+@using NinthAgeCmsToArmyBook.Shared.Changes
 
 @if (Army != null)
 {
@@ -104,11 +102,8 @@ else
     <div>Loading...</div>
 }
 
-@inject ArmyRepository ArmyRepository
-@inject ChangeManager ChangeManager
-@inject LatexRepository LatexRepository
 @inject IJSRuntime JsRuntime
-@inject TexTransformer TexTransformer
+@inject HttpClient HttpClient
 
 @code {
     [Parameter]
@@ -121,17 +116,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
+        Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"Armies/{Id}");
         SelectedBook = Army.Versions.Last();
-        var armyBooks = Army.Versions.SkipLast(1);
-        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, armyBooks.LastOrDefault());
+        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"Change/?armyId={Id}&version={SelectedBook.Version}");
     }
 
-    private void SelectVersion(ArmyBook armyBook)
+    private async Task SelectVersion(ArmyBook armyBook)
     {
         SelectedBook = armyBook;
-        var smallerVersions = Army.Versions.Where(a => string.CompareOrdinal(a.Version, armyBook.Version) < 0);
-        ChangesToLastVersion = ChangeManager.CreateChange(SelectedBook, smallerVersions.LastOrDefault());
+        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"Change/?armyId={Id}&version={SelectedBook.Version}");
     }
 
     private void CreateNewVersion()
@@ -149,17 +142,17 @@ else
     private async Task SaveArmy()
     {
         DidSaveCorrect = true;
-        DidSaveCorrect = await ArmyRepository.Update(Army);
+        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"Armies/{Id}", Army)).IsSuccessStatusCode;
         if (!DidSaveCorrect)
         {
-            Army = await ArmyRepository.LoadArmy(new ObjectId(Id));
+            Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"Armies/{Id}");
         }
     }
 
     private async Task DownloadPdfFile()
     {
-        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
-        LatexRepository.CreatePdf(GetTexFilePath());
+        // await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
+        // LatexRepository.CreatePdf(GetTexFilePath());
         await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
     }
 
@@ -175,7 +168,7 @@ else
 
     private async Task DownloadTexFile()
     {
-        await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
+        // await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
         await DownloadFile(GetTexFilePath(), $"{GetFileName()}.tex");
     }
 

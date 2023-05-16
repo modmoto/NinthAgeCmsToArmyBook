@@ -1,6 +1,6 @@
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
-namespace NinthAgeCmsToArmyBook.Changes;
+namespace NinthAgeCmsToArmyBook.Shared.Changes;
 
 public class NewUnitChange : UnitChange
 {

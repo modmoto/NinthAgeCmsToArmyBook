@@ -1,7 +1,8 @@
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using MongoDB.Bson;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
 namespace NinthAgeCmsToArmyBook.Api.Controllers;
 
@@ -21,5 +22,19 @@ public class ArmiesController : ControllerBase
     {
         var armyVersionsList = await _armyRepository.LoadArmies();
         return Ok(armyVersionsList);
+    }
+    
+    [HttpGet("{id}")]
+    public async Task<ActionResult<ArmyBook>> GetById([FromRoute] string id)
+    {
+        var army = await _armyRepository.LoadArmy(new ObjectId(id));
+        return Ok(army);
+    }
+    
+    [HttpPut("{id}")]
+    public async Task<ActionResult<ArmyBook>> Update([FromBody] ArmyVersions armyBook)
+    {
+        var army = await _armyRepository.Update(armyBook);
+        return Ok(army);
     }
 }

@@ -1,8 +1,8 @@
 using System.Collections.Generic;
 using System.Linq;
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
-namespace NinthAgeCmsToArmyBook.Changes;
+namespace NinthAgeCmsToArmyBook.Shared.Changes;
 
 public class ChangeManager
 {
@@ -10,22 +10,6 @@ public class ChangeManager
     {
         var profileChanges = new List<ProfileChange>();
         return profileChanges;
-    }
-
-    public List<PrizeChange> CreatePriceChange(Unit newBookUnit, Unit oldBookUnit)
-    {
-        var prizeChanges = new List<PrizeChange>();
-        if (newBookUnit.BaseCost != oldBookUnit.BaseCost)
-        {
-            prizeChanges.Add(new BasePrizeChange(oldBookUnit.BaseCost, newBookUnit.BaseCost));
-        }
-
-        if (newBookUnit.AdditionalCost != oldBookUnit.AdditionalCost)
-        {
-            prizeChanges.Add(new AdditionalModelPrizeChange(oldBookUnit.AdditionalCost, newBookUnit.AdditionalCost));
-        }
-
-        return prizeChanges;
     }
 
     public List<UnitChange> CreateChange(ArmyBook newBook, ArmyBook? oldBook)
@@ -46,10 +30,12 @@ public class ChangeManager
             else
             {
                 var profileChange = CreateProfileChange(currentBookUnit, oldBookUnit);
-                var priceChange = CreatePriceChange(currentBookUnit, oldBookUnit);
-                if (profileChange.Any() | priceChange.Any())
+                var basePrizeChange = currentBookUnit.BaseCost != oldBookUnit.BaseCost ? new BasePrizeChange(oldBookUnit.BaseCost, currentBookUnit.BaseCost) : null;
+                var addPrizeChange = currentBookUnit.BaseCost != oldBookUnit.BaseCost ? new AdditionalModelPrizeChange(oldBookUnit.AdditionalCost, currentBookUnit.AdditionalCost) : null;
+
+                if (profileChange.Any() || basePrizeChange != null || addPrizeChange != null)
                 {
-                    changesToLastVersion.Add(new UnitChange(currentBookUnit, priceChange, profileChange));
+                    changesToLastVersion.Add(new UnitChange(currentBookUnit, basePrizeChange, addPrizeChange, profileChange));
                 }
             }
         }

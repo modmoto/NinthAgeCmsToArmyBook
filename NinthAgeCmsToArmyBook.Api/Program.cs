@@ -1,16 +1,12 @@
 using System;
-using System.Collections.Generic;
 using System.Reflection;
-using System.Text.Json.Serialization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
-using MongoDB.Bson.IO;
 using MongoDB.Driver;
-using NinthAgeCmsToArmyBook.Api;
-using NinthAgeCmsToArmyBook.ArmyBooks;
-using NinthAgeCmsToArmyBook.Changes;
-using NinthAgeCmsToArmyBook.Latex;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.Changes;
+using NinthAgeCmsToArmyBook.Shared.Latex;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 
@@ -36,10 +32,7 @@ builder.Host.UseSerilog((context, configuration) =>
         .ReadFrom.Configuration(context.Configuration);
 });
 
-builder.Services.AddControllersWithViews().AddJsonOptions(options =>
-{
-    options.JsonSerializerOptions.Converters.Add(new ObjectIdConverter());
-});
+builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
 
 builder.Services.AddTransient<ArmyRepository>();

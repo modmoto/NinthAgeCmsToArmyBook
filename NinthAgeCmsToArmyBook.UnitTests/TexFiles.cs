@@ -1,5 +1,5 @@
 using System.Reflection;
-using NinthAgeCmsToArmyBook.Latex;
+using NinthAgeCmsToArmyBook.Shared.Latex;
 using NUnit.Framework;
 
 namespace NinthAgeCmsToArmyBook.UnitTests;

@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Text.Json;
 
-namespace NinthAgeCmsToArmyBook.ArmyBooks;
+namespace NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
 public class ArmyBook
 {

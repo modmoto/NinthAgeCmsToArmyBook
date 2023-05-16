@@ -2,9 +2,9 @@ using System.Collections.Generic;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
-using NinthAgeCmsToArmyBook.MongoDb;
+using NinthAgeCmsToArmyBook.Shared.MongoDb;
 
-namespace NinthAgeCmsToArmyBook.ArmyBooks;
+namespace NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
 public class ArmyRepository : MongoDbRepositoryBase
 {

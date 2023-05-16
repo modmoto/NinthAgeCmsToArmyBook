@@ -1,11 +1,11 @@
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using Scriban;
 using Scriban.Runtime;
 
-namespace NinthAgeCmsToArmyBook.Latex;
+namespace NinthAgeCmsToArmyBook.Shared.Latex;
 
 public class TexTransformer
 {

@@ -1,12 +1,16 @@
-namespace NinthAgeCmsToArmyBook.Changes;
+namespace NinthAgeCmsToArmyBook.Shared.Changes;
 
-public class AdditionalModelPrizeChange : PrizeChange
+public class AdditionalModelPrizeChange : IPrintable
 {
-    public AdditionalModelPrizeChange(int old, int @new) : base(old, @new)
+    public AdditionalModelPrizeChange(int old, int @new)
     {
+        Old = old;
+        New = @new;
     }
+    public int Old { get; set; }
+    public int New { get; set; }
 
-    public override string Print()
+    public string Print()
     {
         return $"additional costs {Old} -> {New}";
     }

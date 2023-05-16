@@ -1,4 +1,4 @@
-namespace NinthAgeCmsToArmyBook.Changes;
+namespace NinthAgeCmsToArmyBook.Shared.Changes;
 
 public class ProfileChange : IPrintable
 {

@@ -1,6 +1,6 @@
 ﻿using System.Collections.Generic;
 
-namespace NinthAgeCmsToArmyBook.ArmyBooks;
+namespace NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 
 public class BaseProfile
 {
