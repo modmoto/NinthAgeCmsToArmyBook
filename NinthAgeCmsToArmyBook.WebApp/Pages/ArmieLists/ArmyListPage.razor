@@ -21,7 +21,9 @@
     {
         await base.OnInitializedAsync();
 
-        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("Armies", SerializerOptions);
+        var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
+        jsonSerializerOptions.Converters.Add(new ObjectIdConverter());
+        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("Armies", jsonSerializerOptions);
     }
 
     private List<ArmyVersions> _armies = new();

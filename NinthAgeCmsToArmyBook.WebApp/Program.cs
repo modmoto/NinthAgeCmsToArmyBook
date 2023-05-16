@@ -12,7 +12,7 @@ builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
 
 
-var jsonSerializerOptions = new JsonSerializerOptions();
+var jsonSerializerOptions = new JsonSerializerOptions(JsonSerializerDefaults.Web);
 jsonSerializerOptions.Converters.Add(new ObjectIdConverter());
 builder.Services.AddSingleton(jsonSerializerOptions);
 
