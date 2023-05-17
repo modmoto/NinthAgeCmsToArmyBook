@@ -4,7 +4,6 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
 using NinthAgeCmsToArmyBook.Api.MongoDb;
-using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using NinthAgeCmsToArmyBook.Shared.Changes;
 
 namespace NinthAgeCmsToArmyBook.Api.Controllers;

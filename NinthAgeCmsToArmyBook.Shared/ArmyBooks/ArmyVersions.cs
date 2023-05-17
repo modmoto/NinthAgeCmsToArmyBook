@@ -4,7 +4,6 @@ using System.Linq;
 using System.Text.Json.Serialization;
 using MongoDB.Bson;
 using MongoDB.Bson.Serialization.Attributes;
-using MongoDB.Driver.Linq;
 using NinthAgeCmsToArmyBook.Shared.Contracts;
 
 namespace NinthAgeCmsToArmyBook.Shared.ArmyBooks;

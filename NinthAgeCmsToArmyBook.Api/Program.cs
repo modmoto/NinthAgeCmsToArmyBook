@@ -6,7 +6,6 @@ using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
 using NinthAgeCmsToArmyBook.Api.Latex;
 using NinthAgeCmsToArmyBook.Api.MongoDb;
-using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using NinthAgeCmsToArmyBook.Shared.Changes;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
