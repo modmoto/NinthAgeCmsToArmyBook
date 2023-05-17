@@ -39,7 +39,7 @@ public class ArmiesController : ControllerBase
     {
         var army = await _armyRepository.LoadArmy(new ObjectId(id));
         army.ReplaceVersion(armyBook);
-        await _armyRepository.Update(army);
-        return Ok(army);
+        var worked = await _armyRepository.Update(army);
+        return worked ? Ok(army) : Conflict();
     }
 }
