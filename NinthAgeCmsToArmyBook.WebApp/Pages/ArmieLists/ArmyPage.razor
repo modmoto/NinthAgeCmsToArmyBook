@@ -85,10 +85,16 @@
     </div>
     
     <div class="row">
-        <div class="col">
-            <button class="btn btn-success float-end" @onclick="DownloadPdfFile">
+    <div class="col">
+            <a href="@($"api/Files/download-pdf?armyName={Army.ArmyName}&version={SelectedBook.Version}")">
+                <button class="btn btn-success float-end ms-2">
+                    <span class="oi oi-plus"></span>
+                    <span>download pdf</span>
+                </button>
+            </a>
+            <button class="btn btn-outline-success float-end" @onclick="BuildPdfFile">
                 <span class="oi oi-plus"></span>
-                <span>download pdf</span>
+                <span>build pdf</span>
             </button>
         </div>
     </div>
@@ -99,6 +105,7 @@ else
 }
 
 @inject HttpClient HttpClient
+@inject NavigationManager NavigationManager
 
 @code {
     [Parameter]
@@ -106,6 +113,7 @@ else
     public ArmyVersions Army { get; set; }
     public ArmyBook SelectedBook { get; set; }
     public bool DidSaveCorrect { get; set; } = true;
+    public bool PdfBuilding { get; set; }
     public List<UnitChange> ChangesToLastVersion { get; set; } = new();
 
     protected override async Task OnInitializedAsync()
@@ -154,8 +162,20 @@ else
         }
     }
 
-    private async Task DownloadPdfFile()
+    private void DownloadPdfFile()
     {
-        await HttpClient.GetAsync($"api/Files/pdf?armyId={Army.ArmyId}&version={SelectedBook.Version}");
+        NavigationManager.NavigateTo($"api/Files/download-pdf?armyName={Army.ArmyName}&version={SelectedBook.Version}");
+    }
+    
+    private async Task BuildPdfFile()
+    {
+        PdfBuilding = true;
+        await HttpClient.GetAsync($"api/Files/build-pdf?armyId={Army.ArmyName}&version={SelectedBook.Version}");
+        PdfBuilding = false;
+    }
+
+    private string GetFileLocation()
+    {
+        return $"api/Files/download-pdf?armyName={Army.ArmyName}&version={SelectedBook.Version})";
     }
 }

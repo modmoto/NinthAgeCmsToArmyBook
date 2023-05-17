@@ -1,8 +1,3 @@
-using System.IO;
-using System.Net;
-using System.Net.Http;
-using System.Net.Http.Headers;
-using System.Reflection;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using MongoDB.Bson;
@@ -24,22 +19,19 @@ public class FilesController : ControllerBase
         _texTransformer = texTransformer;
     }
 
-    [HttpGet("pdf")]
-    public async Task<HttpResponseMessage> DownloadPdf([FromQuery] string armyId, [FromQuery] string version)
+    [HttpGet("download-pdf")]
+    public async Task<ActionResult> DownloadPdf([FromQuery] string armyName, [FromQuery] string version)
+    {
+        var pdfFile = await _texTransformer.GetPdfFile(armyName, version);
+        return File(pdfFile, "application/pdf", $"{armyName} {version}.{"pdf"}");
+    }
+    
+    [HttpPut("build-pdf")]
+    public async Task<ActionResult> BuildPdf([FromQuery] string armyId, [FromQuery] string version)
     {
         var army = await _armyRepository.LoadArmy(new ObjectId(armyId));
         await _texTransformer.CreateTexFile(army.ArmyName, army.GetVersion(version));
         await _texTransformer.CreatePdf(army.ArmyName, version);
-        var response = new HttpResponseMessage(HttpStatusCode.OK);
-        response.Content = new StreamContent(_texTransformer.GetPdfFile(army.ArmyName, version));
-        response.Content.Headers.ContentDisposition = new ContentDispositionHeaderValue("attachment");
-        response.Content.Headers.ContentDisposition.FileName = GetFileName(army.ArmyName, version, "pdf");
-        response.Content.Headers.ContentType = new MediaTypeHeaderValue("application/pdf");
-        return response;
-    }
-
-    private string GetFileName(string armyName, string version, string suffix)
-    {
-        return $"{armyName.Replace(" ", "_")}{version}.{suffix}";
+        return Ok();
     }
 }

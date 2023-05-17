@@ -88,8 +88,8 @@ public class TexTransformer
         return GetFilePath(armyName, version, BaseFolderPdfFiles, "pdf");
     }
     
-    public FileStream GetPdfFile(string armyName, string version)
+    public async Task<byte[]> GetPdfFile(string armyName, string version)
     {
-        return new FileStream(GetPdfFilePath(armyName, version), FileMode.Open, FileAccess.Read);
+        return await File.ReadAllBytesAsync(GetPdfFilePath(armyName, version));
     }
 }
