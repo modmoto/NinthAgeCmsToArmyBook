@@ -23,4 +23,13 @@
       <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
     </ItemGroup>
 
+    <ItemGroup>
+      <None Update="Latex\TemplateFiles\MainDocument.tex">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+      <None Update="Latex\TemplateFiles\UnitEntry.tex">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
+    </ItemGroup>
+
 </Project>

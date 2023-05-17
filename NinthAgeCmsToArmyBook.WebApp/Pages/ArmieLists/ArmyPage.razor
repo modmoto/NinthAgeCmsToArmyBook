@@ -90,10 +90,6 @@
                 <span class="oi oi-plus"></span>
                 <span>download pdf</span>
             </button>
-            <button class="btn btn-outline-success float-end me-2" @onclick="DownloadTexFile">
-                <span class="oi oi-plus"></span>
-                <span>download latex</span>
-            </button>
         </div>
     </div>
 }
@@ -102,7 +98,6 @@ else
     <div>Loading...</div>
 }
 
-@inject IJSRuntime JsRuntime
 @inject HttpClient HttpClient
 
 @code {
@@ -161,45 +156,6 @@ else
 
     private async Task DownloadPdfFile()
     {
-        // await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
-        // LatexRepository.CreatePdf(GetTexFilePath());
-        await DownloadFile(GetPdfFilePath(), $"{GetFileName()}.pdf");
-    }
-
-    private string GetPdfFilePath()
-    {
-        return GetFilePath("pdf");
-    }
-
-    private string GetFileName()
-    {
-        return $"{Army.ArmyName.Replace(" ", "_")}_{SelectedBook.Version}";
-    }
-
-    private async Task DownloadTexFile()
-    {
-        // await TexTransformer.CreateTexFile(Army.ArmyName, SelectedBook, GetTexFilePath());
-        await DownloadFile(GetTexFilePath(), $"{GetFileName()}.tex");
-    }
-
-    public string GetFilePath(string suffix)
-    {
-        var filePath = $"{Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location)}/{GetFileName()}.{suffix}";
-        return filePath;
-    }
-
-    private string GetTexFilePath()
-    {
-        return GetFilePath("tex");
-    }
-
-    private async Task DownloadFile(string fileLocation, string fileName)
-    {
-        var bytesFromFile = await File.ReadAllBytesAsync(fileLocation);
-        var fileStream = new MemoryStream(bytesFromFile);
-
-        using var streamRef = new DotNetStreamReference(stream: fileStream);
-
-        await JsRuntime.InvokeVoidAsync("downloadFileFromStream", fileName, streamRef);
+        await HttpClient.GetAsync($"api/Files/pdf?armyId={Army.ArmyId}&version={SelectedBook.Version}");
     }
 }

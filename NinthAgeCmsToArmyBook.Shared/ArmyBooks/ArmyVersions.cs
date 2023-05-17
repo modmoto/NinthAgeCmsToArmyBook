@@ -56,4 +56,9 @@ public class ArmyVersions : IIdentifiable, IVersionable
         var indexOf = Versions.IndexOf(armyVersion);
         Versions[indexOf] = armyBook;
     }
+
+    public ArmyBook GetVersion(string version)
+    {
+        return Versions.SingleOrDefault(v => v.Version == version);
+    }
 }
