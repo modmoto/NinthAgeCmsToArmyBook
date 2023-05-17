@@ -17,6 +17,7 @@
     </ItemGroup>
 
     <ItemGroup>
+      <ProjectReference Include="..\NinthAgeCmsToArmyBook.Api\NinthAgeCmsToArmyBook.Api.csproj" />
       <ProjectReference Include="..\NinthAgeCmsToArmyBook.Shared\NinthAgeCmsToArmyBook.Shared.csproj" />
     </ItemGroup>
 

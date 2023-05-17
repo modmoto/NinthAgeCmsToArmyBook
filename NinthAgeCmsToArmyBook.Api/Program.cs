@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using MongoDB.Driver;
+using NinthAgeCmsToArmyBook.Api.Latex;
+using NinthAgeCmsToArmyBook.Api.MongoDb;
 using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using NinthAgeCmsToArmyBook.Shared.Changes;
-using NinthAgeCmsToArmyBook.Shared.Latex;
 using Serilog;
 using Serilog.Sinks.Elasticsearch;
 

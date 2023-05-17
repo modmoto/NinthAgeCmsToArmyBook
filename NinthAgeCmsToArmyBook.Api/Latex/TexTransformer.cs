@@ -5,7 +5,7 @@ using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using Scriban;
 using Scriban.Runtime;
 
-namespace NinthAgeCmsToArmyBook.Shared.Latex;
+namespace NinthAgeCmsToArmyBook.Api.Latex;
 
 public class TexTransformer
 {

@@ -12,7 +12,7 @@ public class ChangeManager
         return profileChanges;
     }
 
-    public List<UnitChange> CreateChange(ArmyBook newBook, ArmyBook? oldBook)
+    public List<UnitChange> CreateChange(ArmyBook newBook, ArmyBook oldBook)
     {
         var changesToLastVersion = new List<UnitChange>();
         if (oldBook == null)

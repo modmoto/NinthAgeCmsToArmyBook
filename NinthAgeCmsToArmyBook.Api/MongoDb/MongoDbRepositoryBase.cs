@@ -5,8 +5,9 @@ using System.Linq.Expressions;
 using System.Threading.Tasks;
 using MongoDB.Bson;
 using MongoDB.Driver;
+using NinthAgeCmsToArmyBook.Shared.Contracts;
 
-namespace NinthAgeCmsToArmyBook.Shared.MongoDb
+namespace NinthAgeCmsToArmyBook.Api.MongoDb
 {
     public class MongoDbRepositoryBase
     {
@@ -125,15 +126,5 @@ namespace NinthAgeCmsToArmyBook.Shared.MongoDb
         {
             return Delete<T>(x => x.Id == id);
         }
-    }
-
-    public interface IVersionable
-    {
-        public int Version { get; set; }
-    }
-
-    public interface IIdentifiable
-    {
-        public ObjectId Id { get; }
     }
 }

@@ -118,13 +118,19 @@ else
         await base.OnInitializedAsync();
         Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
         SelectedBook = Army.Versions.Last();
-        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
+        await UpdateChanges();
+    }
+
+    private async Task UpdateChanges()
+    {
+        ChangesToLastVersion =
+            await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
     }
 
     private async Task SelectVersion(ArmyBook armyBook)
     {
         SelectedBook = armyBook;
-        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
+        await UpdateChanges();
     }
 
     private void CreateNewVersion()
@@ -142,10 +148,14 @@ else
     private async Task SaveArmy()
     {
         DidSaveCorrect = true;
-        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"Armies/{Id}", Army)).IsSuccessStatusCode;
+        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"api/Armies/{Id}", SelectedBook)).IsSuccessStatusCode;
         if (!DidSaveCorrect)
         {
-            Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"Armies/{Id}");
+            Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
+        }
+        else
+        {
+            await UpdateChanges();
         }
     }
 
