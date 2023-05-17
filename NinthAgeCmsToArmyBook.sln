@@ -1,7 +1,5 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinthAgeCmsToArmyBook", "NinthAgeCmsToArmyBook\NinthAgeCmsToArmyBook.csproj", "{8F09AC0E-C524-41F7-B8D7-28DCE0FE1B19}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinthAgeCmsToArmyBook.UnitTests", "NinthAgeCmsToArmyBook.UnitTests\NinthAgeCmsToArmyBook.UnitTests.csproj", "{E624ACC1-61C0-4484-8642-9DE700970792}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionItems", "{95851595-4BBA-409B-9AAC-C2BC76493148}"
@@ -14,19 +12,33 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SolutionItems", "SolutionIt
 		setup-tex-live.sh = setup-tex-live.sh
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinthAgeCmsToArmyBook.Api", "NinthAgeCmsToArmyBook.Api\NinthAgeCmsToArmyBook.Api.csproj", "{245AC008-697E-4F38-93DE-34E99DF1FB63}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinthAgeCmsToArmyBook.WebApp", "NinthAgeCmsToArmyBook.WebApp\NinthAgeCmsToArmyBook.WebApp.csproj", "{E6EE344A-F28A-4BBF-8E25-DE13CD02118A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "NinthAgeCmsToArmyBook.Shared", "NinthAgeCmsToArmyBook.Shared\NinthAgeCmsToArmyBook.Shared.csproj", "{B9597CF8-4899-45FF-AB52-B2AAAE8AAE7E}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{8F09AC0E-C524-41F7-B8D7-28DCE0FE1B19}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{8F09AC0E-C524-41F7-B8D7-28DCE0FE1B19}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{8F09AC0E-C524-41F7-B8D7-28DCE0FE1B19}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{8F09AC0E-C524-41F7-B8D7-28DCE0FE1B19}.Release|Any CPU.Build.0 = Release|Any CPU
 		{E624ACC1-61C0-4484-8642-9DE700970792}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{E624ACC1-61C0-4484-8642-9DE700970792}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E624ACC1-61C0-4484-8642-9DE700970792}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E624ACC1-61C0-4484-8642-9DE700970792}.Release|Any CPU.Build.0 = Release|Any CPU
+		{245AC008-697E-4F38-93DE-34E99DF1FB63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{245AC008-697E-4F38-93DE-34E99DF1FB63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{245AC008-697E-4F38-93DE-34E99DF1FB63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{245AC008-697E-4F38-93DE-34E99DF1FB63}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E6EE344A-F28A-4BBF-8E25-DE13CD02118A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E6EE344A-F28A-4BBF-8E25-DE13CD02118A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E6EE344A-F28A-4BBF-8E25-DE13CD02118A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E6EE344A-F28A-4BBF-8E25-DE13CD02118A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B9597CF8-4899-45FF-AB52-B2AAAE8AAE7E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B9597CF8-4899-45FF-AB52-B2AAAE8AAE7E}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B9597CF8-4899-45FF-AB52-B2AAAE8AAE7E}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B9597CF8-4899-45FF-AB52-B2AAAE8AAE7E}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

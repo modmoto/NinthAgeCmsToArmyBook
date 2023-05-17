@@ -1,0 +1,24 @@
+﻿@page "/armies"
+@using NinthAgeCmsToArmyBook.Shared.ArmyBooks
+
+<PageTitle>Armies of the 9th Age</PageTitle>
+
+<h1>Armies</h1>
+@foreach (var army in _armies)
+{
+    <NavLink class="nav-link" href="@($"army/{army.ArmyId}")" Match="NavLinkMatch.All">
+        @army.ArmyName
+    </NavLink>
+}
+
+@inject HttpClient Client
+
+@code {
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("api/Armies");
+    }
+
+    private List<ArmyVersions> _armies = new();
+}

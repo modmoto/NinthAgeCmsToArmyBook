@@ -1,0 +1,15 @@
+﻿@using NinthAgeCmsToArmyBook.Shared.ArmyBooks
+<div class="input-group col">
+    <span class="input-group-text font-monospace" title="@ToolTip">@EditLabel</span>
+    <input inputmode="numeric" pattern="[0-9]*" @oninput="e => Value.Min = int.Parse(e.Value.ToString())" value="@Value.Min" type="number" class="form-control" placeholder="@EditLabel" aria-label="@EditLabel">
+    <input inputmode="numeric" pattern="[0-9]*" @oninput="e => Value.Max = int.Parse(e.Value.ToString())" value="@Value.Max" type="number" class="form-control" placeholder="@EditLabel" aria-label="@EditLabel">
+</div>
+
+@code {
+    [Parameter]
+    public MinMax Value { get; set; }
+    [Parameter]
+    public string EditLabel { get; set; }
+    [Parameter]
+    public string ToolTip { get; set; }
+}

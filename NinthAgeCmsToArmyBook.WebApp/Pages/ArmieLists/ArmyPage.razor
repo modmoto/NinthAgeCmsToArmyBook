@@ -1,0 +1,168 @@
+﻿@page "/army/{Id}"
+@using NinthAgeCmsToArmyBook.Shared.ArmyBooks
+@using NinthAgeCmsToArmyBook.Shared.Changes
+
+@if (Army != null)
+{
+    <PageTitle>@Army.ArmyName (@SelectedBook.Version)</PageTitle>
+    
+    <div class="row">
+        <div class="col">
+            <button class="btn btn-outline-success float-end mb-2" @onclick="CreateNewVersion">
+                <span class="oi oi-plus me-2"></span>
+                <span>new version</span>
+            </button>    
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <div class="dropdown float-end mb-2">
+                <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownSeason" data-bs-toggle="dropdown" aria-expanded="false">
+                    Switch version
+                </button>
+                <ul class="dropdown-menu" aria-labelledby="dropdownSeason">
+                    @foreach (var armyBook in Army.Versions.AsEnumerable().Reverse())
+                    {
+                        <li>
+                            <a class="dropdown-item" @onclick="() => SelectVersion(armyBook)">@armyBook.Version</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="col">
+            <h1>@Army.ArmyName (@SelectedBook.Version)</h1>
+        </div>
+        <div class="col">
+            <button class="btn btn-success float-end" @onclick="SaveArmy">
+                <span class="oi oi-file me-2"></span>
+                @if (DidSaveCorrect)
+                {
+                    <span>Save changes</span>
+                }
+                else
+                {
+                    <span>Someone else saved, changes reverted</span>
+                }
+            </button>
+        </div>
+    </div>
+    
+    <div class="row">
+        <div class="col">
+            <h2>Units</h2>
+        </div>
+        <div class="col">
+            <button class="btn btn-outline-success float-end" @onclick="AddUnit">
+                <span class="oi oi-plus"></span>
+                <span>add unit</span>
+            </button>
+        </div>
+        <div class="accordion mb-3">
+            @foreach (var unit in SelectedBook.Units)
+            {
+                <UnitComponent unit="@unit"/>
+            }
+        </div>
+    </div>
+    
+    <div class="row mb-2">
+        <div class="col">
+            <h2>Changes to last version</h2>
+        </div>
+        <div class="accordion">
+            <ul class="list-group">
+                @foreach (var unit in ChangesToLastVersion)
+                {
+                    <li class="list-group-item">@unit.Print()</li>
+                }
+            </ul>
+        </div>
+    </div>
+    
+    <div class="row">
+    <div class="col">
+            <a href="@($"api/Files/download-pdf?armyName={Army.ArmyName}&version={SelectedBook.Version}")">
+                <button class="btn btn-success float-end ms-2">
+                    <span class="oi oi-plus"></span>
+                    <span>download pdf</span>
+                </button>
+            </a>
+            <button class="btn btn-outline-success float-end" @onclick="BuildPdfFile">
+                <span class="oi oi-plus"></span>
+                <span>build pdf</span>
+            </button>
+        </div>
+    </div>
+}
+else
+{
+    <div>Loading...</div>
+}
+
+@inject HttpClient HttpClient
+
+@code {
+    [Parameter]
+    public string Id { get; set; }
+    public ArmyVersions Army { get; set; }
+    public ArmyBook SelectedBook { get; set; }
+    public bool DidSaveCorrect { get; set; } = true;
+    public bool PdfBuilding { get; set; }
+    public List<UnitChange> ChangesToLastVersion { get; set; } = new();
+
+    protected override async Task OnInitializedAsync()
+    {
+        await base.OnInitializedAsync();
+        Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
+        SelectedBook = Army.Versions.Last();
+        await UpdateChanges();
+    }
+
+    private async Task UpdateChanges()
+    {
+        ChangesToLastVersion =
+            await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
+    }
+
+    private async Task SelectVersion(ArmyBook armyBook)
+    {
+        SelectedBook = armyBook;
+        await UpdateChanges();
+    }
+
+    private void CreateNewVersion()
+    {
+        var armyBook = Army.Versions.Last().Clone();
+        Army.Versions.Add(armyBook);
+        SelectedBook = armyBook;
+    }
+
+    private void AddUnit()
+    {
+        SelectedBook.Units.Add(Unit.Init(SelectedBook.Units));
+    }
+
+    private async Task SaveArmy()
+    {
+        DidSaveCorrect = true;
+        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"api/Armies/{Id}", SelectedBook)).IsSuccessStatusCode;
+        if (!DidSaveCorrect)
+        {
+            Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
+        }
+        else
+        {
+            await UpdateChanges();
+        }
+    }
+
+    private async Task BuildPdfFile()
+    {
+        PdfBuilding = true;
+        await HttpClient.PutAsJsonAsync($"api/Files/build-pdf?armyId={Army.ArmyId}&version={SelectedBook.Version}", new {});
+        PdfBuilding = false;
+    }
+}

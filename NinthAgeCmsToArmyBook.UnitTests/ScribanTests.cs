@@ -1,5 +1,5 @@
 using System.Reflection;
-using NinthAgeCmsToArmyBook.ArmyBooks;
+using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 using NUnit.Framework;
 using Scriban;
 

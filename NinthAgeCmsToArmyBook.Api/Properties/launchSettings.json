@@ -1,0 +1,28 @@
+{
+    "iisSettings": {
+      "windowsAuthentication": false,
+      "anonymousAuthentication": true,
+      "iisExpress": {
+        "applicationUrl": "http://localhost:24690",
+        "sslPort": 44371
+      }
+    },
+    "profiles": {
+      "NinthAgeCmsToArmyBook.Api": {
+        "commandName": "Project",
+        "dotnetRunMessages": true,
+        "launchBrowser": true,
+        "inspectUri": "{wsProtocol}://{url.hostname}:{url.port}/_framework/debug/ws-proxy?browser={browserInspectUri}",
+        "applicationUrl": "https://localhost:7078;http://localhost:5293",
+        "environmentVariables": {
+          "ASPNETCORE_ENVIRONMENT": "Development",
+          "XXLATEX_EXECUTABLE_PATH": "/Library/TeX/texbin/pdflatex",
+          "XLATEX_EXECUTABLE_PATH": "/usr/local/texlive/2023/bin/x86_64-linux/pdflatex",
+          "LATEX_EXECUTABLE_PATH": "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
+          "MONGO_DB_CONNECTION_STRING": "mongodb://admin:i1vP7vw5FoCup9VlNaC9@65.21.139.246:3001",
+          "ELASTIC_SECRET": "eOfctAelFiKkyojDxozI",
+          "ELASTIC_URL": "https://elasticsearch.test.modmoto.dev/"
+        }
+      }
+    }
+  }

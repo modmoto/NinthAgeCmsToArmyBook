@@ -5,14 +5,14 @@ EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:6.0 AS build
 WORKDIR /src
-COPY ["NinthAgeCmsToArmyBook/NinthAgeCmsToArmyBook.csproj", "NinthAgeCmsToArmyBook/"]
-RUN dotnet restore "NinthAgeCmsToArmyBook/NinthAgeCmsToArmyBook.csproj"
+COPY ["NinthAgeCmsToArmyBook.Api/NinthAgeCmsToArmyBook.Api.csproj", "NinthAgeCmsToArmyBook.Api/"]
+RUN dotnet restore "NinthAgeCmsToArmyBook.Api/NinthAgeCmsToArmyBook.Api.csproj"
 COPY . .
-WORKDIR "/src/NinthAgeCmsToArmyBook"
-RUN dotnet build "NinthAgeCmsToArmyBook.csproj" -c Release -o /app/build
+WORKDIR "/src/NinthAgeCmsToArmyBook.Api"
+RUN dotnet build "NinthAgeCmsToArmyBook.Api.csproj" -c Release -o /app/build
 
 FROM build AS publish
-RUN dotnet publish "NinthAgeCmsToArmyBook.csproj" -c Release -o /app/publish
+RUN dotnet publish "NinthAgeCmsToArmyBook.Api.csproj" -c Release -o /app/publish
 
 FROM base AS final
 
@@ -22,4 +22,4 @@ RUN ./setup-tex-live.sh
 
 WORKDIR /app
 COPY --from=publish /app/publish .
-ENTRYPOINT ["dotnet", "NinthAgeCmsToArmyBook.dll"]
+ENTRYPOINT ["dotnet", "NinthAgeCmsToArmyBook.Api.dll"]
