@@ -17,7 +17,7 @@
         "environmentVariables": {
           "ASPNETCORE_ENVIRONMENT": "Development",
           "XXLATEX_EXECUTABLE_PATH": "/Library/TeX/texbin/pdflatex",
-          "XLATEX_EXECUTABLE_PATH": "/usr/local/texlive/2022/bin/x86_64-linux/pdflatex",
+          "XLATEX_EXECUTABLE_PATH": "/usr/local/texlive/2023/bin/x86_64-linux/pdflatex",
           "LATEX_EXECUTABLE_PATH": "C:/Users/simon/AppData/Local/Programs/MiKTeX/miktex/bin/x64/pdflatex",
           "MONGO_DB_CONNECTION_STRING": "mongodb://admin:i1vP7vw5FoCup9VlNaC9@65.21.139.246:3001",
           "ELASTIC_SECRET": "eOfctAelFiKkyojDxozI",
