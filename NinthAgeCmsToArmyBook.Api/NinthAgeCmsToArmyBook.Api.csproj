@@ -11,11 +11,16 @@
         <PackageReference Include="Serilog.Enrichers.CorrelationId" Version="3.0.1" />
         <PackageReference Include="Serilog.Enrichers.Environment" Version="2.2.0" />
         <PackageReference Include="Serilog.Sinks.Elasticsearch" Version="9.0.0" />
+        <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0" />
     </ItemGroup>
 
     <ItemGroup>
         <ProjectReference Include="..\NinthAgeCmsToArmyBook.Shared\NinthAgeCmsToArmyBook.Shared.csproj" />
         <ProjectReference Include="..\NinthAgeCmsToArmyBook.WebApp\NinthAgeCmsToArmyBook.WebApp.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <_ContentIncludedByDefault Remove="Pages\Error.cshtml" />
     </ItemGroup>
 
 </Project>

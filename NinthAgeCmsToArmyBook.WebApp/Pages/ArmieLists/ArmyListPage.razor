@@ -17,7 +17,7 @@
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("Armies");
+        _armies = await Client.GetFromJsonAsync<List<ArmyVersions>>("api/Armies");
     }
 
     private List<ArmyVersions> _armies = new();

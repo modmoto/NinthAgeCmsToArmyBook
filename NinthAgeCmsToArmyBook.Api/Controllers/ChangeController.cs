@@ -9,7 +9,7 @@ using NinthAgeCmsToArmyBook.Shared.Changes;
 namespace NinthAgeCmsToArmyBook.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ChangeController : ControllerBase
 {
     private readonly ArmyRepository _armyRepository;

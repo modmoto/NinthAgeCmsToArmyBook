@@ -116,15 +116,15 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"Armies/{Id}");
+        Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
         SelectedBook = Army.Versions.Last();
-        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"Change/?armyId={Id}&version={SelectedBook.Version}");
+        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
     }
 
     private async Task SelectVersion(ArmyBook armyBook)
     {
         SelectedBook = armyBook;
-        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"Change/?armyId={Id}&version={SelectedBook.Version}");
+        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
     }
 
     private void CreateNewVersion()

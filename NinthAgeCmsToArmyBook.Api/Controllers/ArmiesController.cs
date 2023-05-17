@@ -7,7 +7,7 @@ using NinthAgeCmsToArmyBook.Shared.ArmyBooks;
 namespace NinthAgeCmsToArmyBook.Api.Controllers;
 
 [ApiController]
-[Route("[controller]")]
+[Route("api/[controller]")]
 public class ArmiesController : ControllerBase
 {
     private readonly ArmyRepository _armyRepository;
