@@ -2,7 +2,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
-using MongoDB.Bson;
 using NinthAgeCmsToArmyBook.Api.MongoDb;
 using NinthAgeCmsToArmyBook.Shared.Changes;
 
@@ -22,11 +21,11 @@ public class ChangeController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<List<UnitChange>>> GetChangesForArmy([FromQuery] string armyId, [FromQuery] string version)
+    public async Task<ActionResult<List<UnitChange>>> GetChangesForArmy([FromQuery] string armyName, [FromQuery] string version)
     {
-        var army = await _armyRepository.LoadArmy(new ObjectId(armyId));
-        var currentVersion = army.Versions.FirstOrDefault(a => a.Version == version);
-        var smallerVersions = army.Versions.LastOrDefault(a => string.CompareOrdinal(a.Version, version) < 0);
+        var army = await _armyRepository.LoadArmiesByName(armyName);
+        var currentVersion = army.FirstOrDefault(a => a.BookVersion == version);
+        var smallerVersions = army.LastOrDefault(a => string.CompareOrdinal(a.BookVersion, version) < 0);
         var changesToLastVersion = _changeManager.CreateChange(currentVersion, smallerVersions);
         return Ok(changesToLastVersion);
     }

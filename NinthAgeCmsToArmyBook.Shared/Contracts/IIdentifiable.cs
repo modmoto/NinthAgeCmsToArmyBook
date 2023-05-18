@@ -4,5 +4,5 @@ namespace NinthAgeCmsToArmyBook.Shared.Contracts;
 
 public interface IIdentifiable
 {
-    public ObjectId Id { get; }
+    public ObjectId Id { get; set; }
 }

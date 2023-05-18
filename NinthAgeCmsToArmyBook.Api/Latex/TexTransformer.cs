@@ -31,9 +31,9 @@ public class TexTransformer
             unitContent += unitEntry;
         }
         
-        var bodyContentRender = await RenderTemplate("MainDocument", new { ArmyName = armyName, selectedBook.Version, UnitContent = unitContent});
+        var bodyContentRender = await RenderTemplate("MainDocument", new { ArmyName = armyName, Version = selectedBook.BookVersion, UnitContent = unitContent});
 
-        var texFilePath = GetTexFilePath(armyName, selectedBook.Version);
+        var texFilePath = GetTexFilePath(armyName, selectedBook.BookVersion);
         var directoryInfo = new FileInfo(texFilePath).Directory;
         if (!directoryInfo.Exists)
         {

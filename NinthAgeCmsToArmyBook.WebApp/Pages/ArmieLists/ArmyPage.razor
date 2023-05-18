@@ -1,10 +1,10 @@
-﻿@page "/army/{Id}"
+﻿@page "/army/{ArmyName}"
 @using NinthAgeCmsToArmyBook.Shared.ArmyBooks
 @using NinthAgeCmsToArmyBook.Shared.Changes
 
-@if (Army != null)
+@if (SelectedVersion != null)
 {
-    <PageTitle>@Army.ArmyName (@SelectedBook.Version)</PageTitle>
+    <PageTitle>@SelectedVersion.ArmyName (@SelectedVersion.BookVersion)</PageTitle>
     
     <div class="row">
         <div class="col">
@@ -21,10 +21,10 @@
                     Switch version
                 </button>
                 <ul class="dropdown-menu" aria-labelledby="dropdownSeason">
-                    @foreach (var armyBook in Army.Versions.AsEnumerable().Reverse())
+                    @foreach (var armyBook in Versions.AsEnumerable().Reverse())
                     {
                         <li>
-                            <a class="dropdown-item" @onclick="() => SelectVersion(armyBook)">@armyBook.Version</a>
+                            <a class="dropdown-item" @onclick="() => SelectVersion(armyBook)">@armyBook.BookVersion</a>
                         </li>
                     }
                 </ul>
@@ -33,7 +33,7 @@
     </div>
     <div class="row">
         <div class="col">
-            <h1>@Army.ArmyName (@SelectedBook.Version)</h1>
+            <h1>@SelectedVersion.ArmyName (@SelectedVersion.BookVersion)</h1>
         </div>
         <div class="col">
             <button class="btn btn-success float-end" @onclick="SaveArmy">
@@ -61,7 +61,7 @@
             </button>
         </div>
         <div class="accordion mb-3">
-            @foreach (var unit in SelectedBook.Units)
+            @foreach (var unit in SelectedVersion.Units)
             {
                 <UnitComponent unit="@unit"/>
             }
@@ -84,7 +84,7 @@
     
     <div class="row">
     <div class="col">
-            <a href="@($"api/Files/download-pdf?armyName={Army.ArmyName}&version={SelectedBook.Version}")">
+            <a href="@($"api/Files/download-pdf?armyName={SelectedVersion.ArmyName}&version={SelectedVersion.BookVersion}")">
                 <button class="btn btn-success float-end ms-2">
                     <span class="oi oi-plus"></span>
                     <span>download pdf</span>
@@ -106,9 +106,9 @@ else
 
 @code {
     [Parameter]
-    public string Id { get; set; }
-    public ArmyVersions Army { get; set; }
-    public ArmyBook SelectedBook { get; set; }
+    public string ArmyName { get; set; }
+    public ArmyBook SelectedVersion { get; set; }
+    public List<ArmyBook> Versions { get; set; }
     public bool DidSaveCorrect { get; set; } = true;
     public bool PdfBuilding { get; set; }
     public List<UnitChange> ChangesToLastVersion { get; set; } = new();
@@ -116,53 +116,53 @@ else
     protected override async Task OnInitializedAsync()
     {
         await base.OnInitializedAsync();
-        Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
-        SelectedBook = Army.Versions.Last();
+        Versions = await HttpClient.GetFromJsonAsync<List<ArmyBook>>($"api/Armies/?nameFilter={ArmyName}");
+        SelectedVersion = Versions.Last();
         await UpdateChanges();
     }
 
     private async Task UpdateChanges()
     {
-        ChangesToLastVersion =
-            await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyId={Id}&version={SelectedBook.Version}");
+        ChangesToLastVersion = await HttpClient.GetFromJsonAsync<List<UnitChange>>($"api/Change/?armyName={ArmyName}&version={SelectedVersion.BookVersion}");
     }
 
     private async Task SelectVersion(ArmyBook armyBook)
     {
-        SelectedBook = armyBook;
+        SelectedVersion = armyBook;
         await UpdateChanges();
     }
 
-    private void CreateNewVersion()
+    private async Task CreateNewVersion()
     {
-        var armyBook = Army.Versions.Last().Clone();
-        Army.Versions.Add(armyBook);
-        SelectedBook = armyBook;
+        var result = await HttpClient.PostAsJsonAsync($"api/Armies/{SelectedVersion.ArmyId}", new {});
+        result.EnsureSuccessStatusCode();
+        var armyBook = await result.Content.ReadFromJsonAsync<ArmyBook>();
+        Versions.Add(armyBook);
+        SelectedVersion = armyBook;
+        ChangesToLastVersion = new List<UnitChange>();
     }
 
     private void AddUnit()
     {
-        SelectedBook.Units.Add(Unit.Init(SelectedBook.Units));
+        SelectedVersion.Units.Add(Unit.Init(SelectedVersion.Units));
     }
 
     private async Task SaveArmy()
     {
         DidSaveCorrect = true;
-        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"api/Armies/{Id}", SelectedBook)).IsSuccessStatusCode;
+        DidSaveCorrect = (await HttpClient.PutAsJsonAsync($"api/Armies/{SelectedVersion.ArmyId}", SelectedVersion)).IsSuccessStatusCode;
         if (!DidSaveCorrect)
         {
-            Army = await HttpClient.GetFromJsonAsync<ArmyVersions>($"api/Armies/{Id}");
+            SelectedVersion = await HttpClient.GetFromJsonAsync<ArmyBook>($"api/Armies/{SelectedVersion.ArmyId}");
         }
-        else
-        {
-            await UpdateChanges();
-        }
+        
+        await UpdateChanges();
     }
 
     private async Task BuildPdfFile()
     {
         PdfBuilding = true;
-        await HttpClient.PutAsJsonAsync($"api/Files/build-pdf?armyId={Army.ArmyId}&version={SelectedBook.Version}", new {});
+        await HttpClient.PutAsJsonAsync($"api/Files/build-pdf?armyId={SelectedVersion.ArmyId}&version={SelectedVersion.BookVersion}", new {});
         PdfBuilding = false;
     }
 }

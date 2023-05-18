@@ -30,7 +30,7 @@ public class FilesController : ControllerBase
     public async Task<ActionResult> BuildPdf([FromQuery] string armyId, [FromQuery] string version)
     {
         var army = await _armyRepository.LoadArmy(new ObjectId(armyId));
-        await _texTransformer.CreateTexFile(army.ArmyName, army.GetVersion(version));
+        await _texTransformer.CreateTexFile(army.ArmyName, army);
         await _texTransformer.CreatePdf(army.ArmyName, version);
         return Ok();
     }

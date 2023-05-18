@@ -12,49 +12,59 @@ public class ArmyRepository : MongoDbRepositoryBase
     {
     }
 
-    public Task<List<ArmyVersions>> LoadArmies()
+    public Task<List<ArmyBook>> LoadArmies()
     {
-        return LoadAll<ArmyVersions>();
+        return LoadAll<ArmyBook>();
     }
 
     public Task InitArmies()
     {
-        var armyBooks = new List<ArmyVersions>
+        var armyBooks = new List<ArmyBook>
         {
-            ArmyVersions.Init("Beast Herds"),
-            ArmyVersions.Init("Daemon Legions"),
-            ArmyVersions.Init("Dread Elves"),
-            ArmyVersions.Init("Dwarven Holds"),
-            ArmyVersions.Init("Empire of Sonnstahl"),
-            ArmyVersions.Init("Highborn Elves"),
-            ArmyVersions.Init("Infernal Dwarves"),
-            ArmyVersions.Init("Kingdom of Equitaine"),
-            ArmyVersions.Init("Ogre Khans"),
-            ArmyVersions.Init("Ors and Goblins"),
-            ArmyVersions.Init("Saurian Ancients"),
-            ArmyVersions.Init("Sylvan Elves"),
-            ArmyVersions.Init("Undying Dynasties"),
-            ArmyVersions.Init("Vampire Covenant"),
-            ArmyVersions.Init("The Vermin Swarm"),
-            ArmyVersions.Init("Warriors of the Dark Gods"),
-            ArmyVersions.Init("Åsklanders"),
-            ArmyVersions.Init("Makhar"),
-            ArmyVersions.Init("Cultists"),
-            ArmyVersions.Init("Legions of Sin"),
-            ArmyVersions.Init("Hobgoblins"),
-            ArmyVersions.Init("Giants of the 9th Age")
+            ArmyBook.Init("Beast Herds"),
+            ArmyBook.Init("Daemon Legions"),
+            ArmyBook.Init("Dread Elves"),
+            ArmyBook.Init("Dwarven Holds"),
+            ArmyBook.Init("Empire of Sonnstahl"),
+            ArmyBook.Init("Highborn Elves"),
+            ArmyBook.Init("Infernal Dwarves"),
+            ArmyBook.Init("Kingdom of Equitaine"),
+            ArmyBook.Init("Ogre Khans"),
+            ArmyBook.Init("Ors and Goblins"),
+            ArmyBook.Init("Saurian Ancients"),
+            ArmyBook.Init("Sylvan Elves"),
+            ArmyBook.Init("Undying Dynasties"),
+            ArmyBook.Init("Vampire Covenant"),
+            ArmyBook.Init("The Vermin Swarm"),
+            ArmyBook.Init("Warriors of the Dark Gods"),
+            ArmyBook.Init("Åsklanders"),
+            ArmyBook.Init("Makhar"),
+            ArmyBook.Init("Cultists"),
+            ArmyBook.Init("Legions of Sin"),
+            ArmyBook.Init("Hobgoblins"),
+            ArmyBook.Init("Giants of the 9th Age")
         };
 
         return Insert(armyBooks);
     }
 
-    public Task<ArmyVersions> LoadArmy(ObjectId objectId)
+    public Task<ArmyBook> LoadArmy(ObjectId objectId)
     {
-        return LoadFirst<ArmyVersions>(objectId);
+        return LoadFirst<ArmyBook>(objectId);
     }
 
-    public Task<bool> Update(ArmyVersions army)
+    public Task<bool> Update(ArmyBook army)
     {
         return UpdateVersionsave(army);
+    }
+
+    public Task<List<ArmyBook>> LoadArmiesByName(string nameFilter)
+    {
+        return LoadAll<ArmyBook>(a => a.ArmyName == nameFilter);
+    }
+
+    public Task Create(ArmyBook armyBook)
+    {
+        return Insert(armyBook);
     }
 }

@@ -1,4 +1,5 @@
 ﻿@page "/armies"
+@using System.Web
 @using NinthAgeCmsToArmyBook.Shared.ArmyBooks
 
 <PageTitle>Armies of the 9th Age</PageTitle>
@@ -6,7 +7,7 @@
 <h1>Armies</h1>
 @foreach (var army in _armies)
 {
-    <NavLink class="nav-link" href="@($"army/{army.ArmyId}")" Match="NavLinkMatch.All">
+    <NavLink class="nav-link" href="@($"army/{army.ArmyName}")" Match="NavLinkMatch.All">
         @army.ArmyName
     </NavLink>
 }
